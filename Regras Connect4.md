@@ -8,13 +8,13 @@
 
 ### Regra 1: Zugzwang
 
-Sempre tentar controlar a coluna com Zugzwang; controlar a partir de uma linha par (ou quando a quantidade de espaços vazios em uma coluna for ímpar), para forçar o inimigo a sempre precisar escolher uma coluna nova.  
+Sempre tentar controlar a coluna a partir de uma linha par (ou quando a quantidade de espaços vazios em uma coluna for ímpar), para forçar o inimigo a sempre precisar escolher uma coluna nova.  
 "This enables us to define the concept of Control of Zugzwang: A is in control of the Zugzwang if he is able to guide the way odd and even squares are divided among both players."
 
 #### Quem controla o Zugzwang?
 - Jogador A: 
     - Se possuir ameaça em linha ímpar e espaços vazios disponíveis nas colunas for par;
-    - Priorizar possíveis vitórias (ameaças) em colunas ímpar (para evitar o Zugzwang)
+    - Priorizar possíveis vitórias (ameaças) em linhas ímpar (para evitar o Zugzwang)
 
 - Jogador B:
     - Se possuir ameaça em linha par e espaços vazios disponíveis nas colunas for ímpar
@@ -46,7 +46,7 @@ Sempre tentar controlar a coluna com Zugzwang; controlar a partir de uma linha p
 >All groups which contain both squares.
 
 ---
-## Outras regras: porém não tão importantes para a avaliação do Minimax ---
+## Outras regras: porém não tão importantes para a avaliação do Minimax
  
 ### Regra 4: Vertical
 >Vertical formally:
