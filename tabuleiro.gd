@@ -31,7 +31,7 @@ func verificar_vitoria(jogador: Jogador) -> bool:
 			var connect2 = self.tabuleiro[linha][coluna + 1].cor
 			var connect3 = self.tabuleiro[linha][coluna + 2].cor
 			var connect4 = self.tabuleiro[linha][coluna + 3].cor
-			
+
 			return connect1 == connect2 == connect3 == connect4 == jogador.cor
 			
 	# Verifica vitória do jogador na vertical
@@ -41,7 +41,7 @@ func verificar_vitoria(jogador: Jogador) -> bool:
 			var connect2 = self.tabuleiro[linha + 1][coluna].cor
 			var connect3 = self.tabuleiro[linha + 2][coluna].cor
 			var connect4 = self.tabuleiro[linha + 3][coluna].cor
-			
+
 			return connect1 == connect2 == connect3 == connect4 == jogador.cor
 			
 	# Verifica vitória do jogador na diagonal principal
@@ -61,10 +61,13 @@ func verificar_vitoria(jogador: Jogador) -> bool:
 			var connect2 = self.tabuleiro[linha - 1][coluna + 1].cor
 			var connect3 = self.tabuleiro[linha - 2][coluna + 2].cor
 			var connect4 = self.tabuleiro[linha - 3][coluna - 3].cor
-			
+
 			return connect1 == connect2 == connect3 == connect4 == jogador.cor
 	
 	return false
+
+func verificar_empate() -> bool:
+	return self.tabuleiro.count(null) == 0
 
 func avaliar_estado() -> int:
 	return 1
