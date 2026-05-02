@@ -6,6 +6,7 @@
 
 ---
 
+## Regras principais
 ### Regra 1: Zugzwang
 
 Sempre tentar controlar a coluna a partir de uma linha par (ou quando a quantidade de espaços vazios em uma coluna for ímpar), para forçar o inimigo a sempre precisar escolher uma coluna nova.  
@@ -46,7 +47,7 @@ Sempre tentar controlar a coluna a partir de uma linha par (ou quando a quantida
 >All groups which contain both squares.
 
 ---
-## Outras regras: porém não tão importantes para a avaliação do Minimax
+## Outras regras
  
 ### Regra 4: Vertical
 >Vertical formally:

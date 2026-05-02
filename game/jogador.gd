@@ -1,7 +1,7 @@
 extends Resource
 class_name Jogador
 
-enum Cor {Amarelo, Vermelho}
+enum Cor {Amarelo, Vermelho, Nenhum}
 
 @export var cor: Cor;
 
