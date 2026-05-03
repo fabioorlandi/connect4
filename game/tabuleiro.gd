@@ -229,16 +229,16 @@ func avaliar_estado(jogador: Jogador) -> int:
 		jogadorOponente = jogadorAtual
 
 	if verificar_vitoria(jogador):
-		return 10000
+		return 100000
 	
 	if verificar_vitoria(jogadorOponente):
-		return -5000
+		return -50000
 	
 	var pontuacaoTabuleiro = 0
 	if verificar_ameaca_tripla(jogador):
-		pontuacaoTabuleiro += 500
+		pontuacaoTabuleiro += 5000
 	if verificar_ameaca_tripla(jogadorOponente):
-		pontuacaoTabuleiro -= 300
+		pontuacaoTabuleiro -= 3000
 	if verificar_ameaca_dupla(jogador):
 		pontuacaoTabuleiro += 500
 	if verificar_ameaca_dupla(jogadorOponente):

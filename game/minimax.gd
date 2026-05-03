@@ -14,7 +14,7 @@ func minimax(tabuleiro: Tabuleiro, jogador: Jogador, profMax: int, prof: int) ->
 	
 	if tabuleiro.jogadorAtual.cor == jogador.cor:
 		# MAX
-		var melhorPontuacao = -99999
+		var melhorPontuacao = -999999
 		
 		for movimento in tabuleiro.espacos_jogaveis():
 			var novoTabuleiro = tabuleiro.movimentar_IA(movimento[0], movimento[1], tabuleiro.jogadorAtual)
@@ -29,7 +29,7 @@ func minimax(tabuleiro: Tabuleiro, jogador: Jogador, profMax: int, prof: int) ->
 				melhoresJogadas.append(jogada)
 	else:
 		# MIN
-		var melhorPontuacao = 99999
+		var melhorPontuacao = 999999
 		
 		for movimento in tabuleiro.espacos_jogaveis():
 			var novoTabuleiro = tabuleiro.movimentar_IA(movimento[0], movimento[1], tabuleiro.jogadorAtual)
