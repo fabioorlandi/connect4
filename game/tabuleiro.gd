@@ -5,40 +5,70 @@ var jogadorVazio = Jogador.new(Jogador.Cor.Nenhum)
 var jogadorAmarelo = Jogador.new(Jogador.Cor.Amarelo)
 var jogadorVermelho = Jogador.new(Jogador.Cor.Vermelho)
 var jogadorAtual: Jogador
+var jogadorVitoria: Jogador
+
+const PESOS_TABULEIRO = [
+	[3, 4, 5, 7, 5, 4, 3],
+	[4, 6, 8, 10, 8, 6, 4],
+	[5, 8, 11, 13, 11, 8, 5],
+	[5, 8, 11, 13, 11, 8, 5],
+	[4, 6, 8, 10, 8, 6, 4],
+	[3, 4, 5, 7, 5, 4, 3]
+]
 
 @export var tabuleiro: Array
 
 func _init() -> void:
-	var vazio = jogadorVazio
+	var vazio = jogadorVazio.cor
 	self.tabuleiro = [
-		[vazio],[vazio],[vazio],[vazio],[vazio],[vazio],[vazio],
-		[vazio],[vazio],[vazio],[vazio],[vazio],[vazio],[vazio],
-		[vazio],[vazio],[vazio],[vazio],[vazio],[vazio],[vazio],
-		[vazio],[vazio],[vazio],[vazio],[vazio],[vazio],[vazio],
-		[vazio],[vazio],[vazio],[vazio],[vazio],[vazio],[vazio],
-		[vazio],[vazio],[vazio],[vazio],[vazio],[vazio],[vazio]
+		[vazio,vazio,vazio,vazio,vazio,vazio,vazio],
+		[vazio,vazio,vazio,vazio,vazio,vazio,vazio],
+		[vazio,vazio,vazio,vazio,vazio,vazio,vazio],
+		[vazio,vazio,vazio,vazio,vazio,vazio,vazio],
+		[vazio,vazio,vazio,vazio,vazio,vazio,vazio],
+		[vazio,vazio,vazio,vazio,vazio,vazio,vazio]
 	]
 	jogadorAtual = jogadorAmarelo
+
+func estado_terminal() -> bool:
+	if verificar_empate():
+		return true
+	if jogadorVitoria != null:
+		return true
+		
+	return false
 
 func alternar_jogador() -> void:
 	jogadorAtual = proximo_a_jogar()
 
 func proximo_a_jogar() -> Jogador:
-	if self.tabuleiro.count(Jogador.Cor.Nenhum) % 2:
+	var espacosVazios = 0
+	for linha in range(6):
+		for coluna in range(7):
+			if self.tabuleiro[linha][coluna] == Jogador.Cor.Nenhum:
+				espacosVazios += 1
+	
+	if espacosVazios % 2 == 0:
 		return jogadorAmarelo 
 	else: 
 		return jogadorVermelho
 
 func espacos_jogaveis() -> Array:
-	var espacosValidos: Array = [];
+	var espacos = []
 	
 	for coluna in range(7):
-		for linha in range(6):
+		for linha in range(5, -1, -1):
 			if self.tabuleiro[linha][coluna] == Jogador.Cor.Nenhum:
-				espacosValidos.append([linha][coluna])
+				espacos.append([linha, coluna, PESOS_TABULEIRO[linha][coluna]])
 				break
+	
+	espacos.sort_custom(func(a, b):	return a[2] > b[2])
+	
+	var resultado = []
+	for espaco in espacos:
+		resultado.append([espaco[0], espaco[1]])
 
-	return espacosValidos
+	return resultado
 
 func computar_jogada(pos_x: int, pos_y: int) -> void:
 	if self.tabuleiro[pos_x][pos_y] == Jogador.Cor.Nenhum:
@@ -47,7 +77,12 @@ func computar_jogada(pos_x: int, pos_y: int) -> void:
 		
 func movimentar_IA(pos_x: int, pos_y: int, jogador: Jogador) -> Tabuleiro:
 	var novo_tabuleiro = self.duplicate(true)
-	novo_tabuleiro.tabuleiro[pos_x][pos_y] = jogador
+	novo_tabuleiro.tabuleiro[pos_x][pos_y] = jogador.cor
+	novo_tabuleiro.jogadorAtual = novo_tabuleiro.proximo_a_jogar()
+	
+	if novo_tabuleiro.verificar_vitoria(jogador):
+		novo_tabuleiro.jogadorVitoria = jogador
+
 	return novo_tabuleiro
 
 func verificar_vitoria(jogador: Jogador) -> bool:
@@ -62,9 +97,9 @@ func verificar_vitoria(jogador: Jogador) -> bool:
 		for coluna in range(min_colunas_avaliacao):
 			var cores_array = []
 			for i in range(4):
-				cores_array.append(self.tabuleiro[linha][coluna + i].cor)
+				cores_array.append(self.tabuleiro[linha][coluna + i])
 		
-			var count_cor = cores_array.count(jogador)
+			var count_cor = cores_array.count(jogador.cor)
 			if count_cor == 4:
 				vitoria = true
 
@@ -74,9 +109,9 @@ func verificar_vitoria(jogador: Jogador) -> bool:
 			for coluna in range(7):
 				var cores_array = []
 				for i in range(4):
-					cores_array.append(self.tabuleiro[linha + i][coluna].cor)
+					cores_array.append(self.tabuleiro[linha + i][coluna])
 
-				var count_cor = cores_array.count(jogador)
+				var count_cor = cores_array.count(jogador.cor)
 				if count_cor == 4:
 					vitoria = true
 
@@ -86,28 +121,37 @@ func verificar_vitoria(jogador: Jogador) -> bool:
 			for coluna in range(min_colunas_avaliacao):
 				var cores_array = []
 				for i in range(4):
-					cores_array.append(self.tabuleiro[linha + i][coluna + i].cor)
+					cores_array.append(self.tabuleiro[linha + i][coluna + i])
 
-				var count_cor = cores_array.count(jogador)
+				var count_cor = cores_array.count(jogador.cor)
 				if count_cor == 4:
 					vitoria = true
 
 	# Verifica vitória do jogador na diagonal secundária
 	if !vitoria:
-		for linha in range(min_linhas_avaliacao, 6):
+		for linha in range(min_linhas_avaliacao):
 			for coluna in range(min_colunas_avaliacao):
 				var cores_array = []
 				for i in range(4):
-					cores_array.append(self.tabuleiro[linha + i][coluna + 3 - i].cor)
+					cores_array.append(self.tabuleiro[linha + i][coluna + 3 - i])
 
-				var count_cor = cores_array.count(jogador)
+				var count_cor = cores_array.count(jogador.cor)
 				if count_cor == 4:
 					vitoria = true
 	
-	return false
+	if vitoria:
+		jogadorVitoria = jogador
+	
+	return vitoria
 
 func verificar_empate() -> bool:
-	return self.tabuleiro.count(Jogador.Cor.Nenhum) == 0
+	var espacosVazios = 0
+	for linha in range(6):
+		for coluna in range(7):
+			if self.tabuleiro[linha][coluna] == Jogador.Cor.Nenhum:
+				espacosVazios += 1
+	
+	return espacosVazios == 0
 
 func verificar_ameaca_dupla(jogador: Jogador) -> bool:
 	return verificar_ameaca(jogador, 2, 2)
@@ -127,9 +171,9 @@ func verificar_ameaca(jogador: Jogador, nivelAmeaca: int, casasVazias: int) -> b
 		for coluna in range(min_colunas_avaliacao):
 			var cores_array = []
 			for i in range(4):
-				cores_array.append(self.tabuleiro[linha][coluna + i].cor)
+				cores_array.append(self.tabuleiro[linha][coluna + i])
 
-			var count_cor = cores_array.count(jogador)
+			var count_cor = cores_array.count(jogador.cor)
 			var count_vazio = cores_array.count(Jogador.Cor.Nenhum)
 
 			if count_cor == nivelAmeaca and count_vazio == casasVazias:
@@ -141,9 +185,9 @@ func verificar_ameaca(jogador: Jogador, nivelAmeaca: int, casasVazias: int) -> b
 			for coluna in range(7):
 				var cores_array = []
 				for i in range(4):
-					cores_array.append(self.tabuleiro[linha + i][coluna].cor)
+					cores_array.append(self.tabuleiro[linha + i][coluna])
 
-				var count_cor = cores_array.count(jogador)
+				var count_cor = cores_array.count(jogador.cor)
 				var count_vazio = cores_array.count(Jogador.Cor.Nenhum)
 
 				if count_cor == nivelAmeaca and count_vazio == casasVazias:
@@ -155,9 +199,9 @@ func verificar_ameaca(jogador: Jogador, nivelAmeaca: int, casasVazias: int) -> b
 			for coluna in range(min_colunas_avaliacao):
 				var cores_array = []
 				for i in range(4):
-					cores_array.append(self.tabuleiro[linha + i][coluna + i].cor)
+					cores_array.append(self.tabuleiro[linha + i][coluna + i])
 
-				var count_cor = cores_array.count(jogador)
+				var count_cor = cores_array.count(jogador.cor)
 				var count_vazio = cores_array.count(Jogador.Cor.Nenhum)
 
 				if count_cor == nivelAmeaca and count_vazio == casasVazias:
@@ -169,9 +213,9 @@ func verificar_ameaca(jogador: Jogador, nivelAmeaca: int, casasVazias: int) -> b
 			for coluna in range(min_colunas_avaliacao):
 				var cores_array = []
 				for i in range(4):
-					cores_array.append(self.tabuleiro[linha + i][coluna + 3 - i].cor)
+					cores_array.append(self.tabuleiro[linha + i][coluna + 3 - i])
 
-				var count_cor = cores_array.count(jogador)
+				var count_cor = cores_array.count(jogador.cor)
 				var count_vazio = cores_array.count(Jogador.Cor.Nenhum)
 
 				if count_cor == nivelAmeaca and count_vazio == casasVazias:
@@ -186,15 +230,30 @@ func avaliar_estado(jogador: Jogador) -> int:
 	else: 
 		jogadorOponente = jogadorAtual
 
-	var pontuacao_tabuleiro = 0
-	if verificar_vitoria(jogador) || verificar_empate():
-		pontuacao_tabuleiro += 50
-	elif verificar_ameaca_tripla(jogador):
-		pontuacao_tabuleiro += 10
-	elif verificar_ameaca_dupla(jogador):
-		pontuacao_tabuleiro += 5
+	if verificar_vitoria(jogador):
+		return 1000
 	
 	if verificar_vitoria(jogadorOponente):
-		pontuacao_tabuleiro -= 20
+		return -500
+	
+	var pontuacaoTabuleiro = 0
+	if verificar_ameaca_tripla(jogador):
+		pontuacaoTabuleiro += 50
+	if verificar_ameaca_tripla(jogadorOponente):
+		pontuacaoTabuleiro -= 30
+	if verificar_ameaca_dupla(jogador):
+		pontuacaoTabuleiro += 50
+	if verificar_ameaca_dupla(jogadorOponente):
+		pontuacaoTabuleiro -= 20
+	
+	for linha in range(6):
+		if self.tabuleiro[linha][3] == jogador.cor:
+			pontuacaoTabuleiro += 50 * (linha + 1)
 
-	return pontuacao_tabuleiro
+	for coluna in range(7):
+		for linha in range(5, -1, -1):
+			if self.tabuleiro[linha][coluna] == jogador.cor:
+				pontuacaoTabuleiro += linha * 10
+				break
+
+	return pontuacaoTabuleiro
