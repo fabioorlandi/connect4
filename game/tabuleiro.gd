@@ -31,11 +31,9 @@ func _init() -> void:
 	jogadorAtual = jogadorAmarelo
 
 func estado_terminal() -> bool:
-	if verificar_empate():
+	if verificar_empate() || jogadorVitoria != null:
 		return true
-	if jogadorVitoria != null:
-		return true
-		
+
 	return false
 
 func alternar_jogador() -> void:
@@ -231,20 +229,20 @@ func avaliar_estado(jogador: Jogador) -> int:
 		jogadorOponente = jogadorAtual
 
 	if verificar_vitoria(jogador):
-		return 1000
+		return 10000
 	
 	if verificar_vitoria(jogadorOponente):
-		return -500
+		return -5000
 	
 	var pontuacaoTabuleiro = 0
 	if verificar_ameaca_tripla(jogador):
-		pontuacaoTabuleiro += 50
+		pontuacaoTabuleiro += 500
 	if verificar_ameaca_tripla(jogadorOponente):
-		pontuacaoTabuleiro -= 30
+		pontuacaoTabuleiro -= 300
 	if verificar_ameaca_dupla(jogador):
-		pontuacaoTabuleiro += 50
+		pontuacaoTabuleiro += 500
 	if verificar_ameaca_dupla(jogadorOponente):
-		pontuacaoTabuleiro -= 20
+		pontuacaoTabuleiro -= 200
 	
 	for linha in range(6):
 		if self.tabuleiro[linha][3] == jogador.cor:
