@@ -8,178 +8,227 @@
 [node name="Espacos" type="Node2D" parent="." unique_id=873254640]
 
 [node name="Espaco_0_0" parent="Espacos" unique_id=39952930 instance=ExtResource("1_qqlt4")]
+position = Vector2(32, 82)
 
 [node name="Espaco_0_1" parent="Espacos" unique_id=687518358 instance=ExtResource("1_qqlt4")]
+position = Vector2(96, 82)
 coluna = 1
 
 [node name="Espaco_0_2" parent="Espacos" unique_id=1892275811 instance=ExtResource("1_qqlt4")]
+position = Vector2(160, 82)
 coluna = 2
 
 [node name="Espaco_0_3" parent="Espacos" unique_id=1087389774 instance=ExtResource("1_qqlt4")]
+position = Vector2(224, 82)
 coluna = 3
 
 [node name="Espaco_0_4" parent="Espacos" unique_id=1188251845 instance=ExtResource("1_qqlt4")]
+position = Vector2(288, 82)
 coluna = 4
 
 [node name="Espaco_0_5" parent="Espacos" unique_id=1378301059 instance=ExtResource("1_qqlt4")]
+position = Vector2(352, 82)
 coluna = 5
 
 [node name="Espaco_0_6" parent="Espacos" unique_id=1215505618 instance=ExtResource("1_qqlt4")]
+position = Vector2(416, 82)
 coluna = 6
 
 [node name="Espaco_1_0" parent="Espacos" unique_id=1743209915 instance=ExtResource("1_qqlt4")]
+position = Vector2(32, 146)
 linha = 1
 
 [node name="Espaco_1_1" parent="Espacos" unique_id=1313807158 instance=ExtResource("1_qqlt4")]
+position = Vector2(96, 146)
 linha = 1
 coluna = 1
 
 [node name="Espaco_1_2" parent="Espacos" unique_id=332264451 instance=ExtResource("1_qqlt4")]
+position = Vector2(160, 146)
 linha = 1
 coluna = 2
 
 [node name="Espaco_1_3" parent="Espacos" unique_id=1932111153 instance=ExtResource("1_qqlt4")]
+position = Vector2(224, 146)
 linha = 1
 coluna = 3
 
 [node name="Espaco_1_4" parent="Espacos" unique_id=27699458 instance=ExtResource("1_qqlt4")]
+position = Vector2(288, 146)
 linha = 1
 coluna = 4
 
 [node name="Espaco_1_5" parent="Espacos" unique_id=2138585616 instance=ExtResource("1_qqlt4")]
+position = Vector2(352, 146)
 linha = 1
 coluna = 5
 
 [node name="Espaco_1_6" parent="Espacos" unique_id=1180991553 instance=ExtResource("1_qqlt4")]
+position = Vector2(416, 146)
 linha = 1
 coluna = 6
 
 [node name="Espaco_2_0" parent="Espacos" unique_id=686885526 instance=ExtResource("1_qqlt4")]
+position = Vector2(32, 210)
 linha = 2
 
 [node name="Espaco_2_1" parent="Espacos" unique_id=2132974336 instance=ExtResource("1_qqlt4")]
+position = Vector2(96, 210)
 linha = 2
 coluna = 1
 
 [node name="Espaco_2_2" parent="Espacos" unique_id=2039498500 instance=ExtResource("1_qqlt4")]
+position = Vector2(160, 210)
 linha = 2
 coluna = 2
 
 [node name="Espaco_2_3" parent="Espacos" unique_id=599374138 instance=ExtResource("1_qqlt4")]
+position = Vector2(224, 210)
 linha = 2
 coluna = 3
 
 [node name="Espaco_2_4" parent="Espacos" unique_id=1903547773 instance=ExtResource("1_qqlt4")]
+position = Vector2(288, 210)
 linha = 2
 coluna = 4
 
 [node name="Espaco_2_5" parent="Espacos" unique_id=1576044159 instance=ExtResource("1_qqlt4")]
+position = Vector2(352, 210)
 linha = 2
 coluna = 5
 
 [node name="Espaco_2_6" parent="Espacos" unique_id=1587440800 instance=ExtResource("1_qqlt4")]
+position = Vector2(416, 210)
 linha = 2
 coluna = 6
 
 [node name="Espaco_3_0" parent="Espacos" unique_id=1509960030 instance=ExtResource("1_qqlt4")]
+position = Vector2(32, 274)
 linha = 3
 
 [node name="Espaco_3_1" parent="Espacos" unique_id=1347385946 instance=ExtResource("1_qqlt4")]
+position = Vector2(96, 274)
 linha = 3
 coluna = 1
 
 [node name="Espaco_3_2" parent="Espacos" unique_id=779250729 instance=ExtResource("1_qqlt4")]
+position = Vector2(160, 274)
 linha = 3
 coluna = 2
 
 [node name="Espaco_3_3" parent="Espacos" unique_id=2067279209 instance=ExtResource("1_qqlt4")]
+position = Vector2(224, 274)
 linha = 3
 coluna = 3
 
 [node name="Espaco_3_4" parent="Espacos" unique_id=1938775107 instance=ExtResource("1_qqlt4")]
+position = Vector2(288, 274)
 linha = 3
 coluna = 4
 
 [node name="Espaco_3_5" parent="Espacos" unique_id=526120028 instance=ExtResource("1_qqlt4")]
+position = Vector2(352, 274)
 linha = 3
 coluna = 5
 
 [node name="Espaco_3_6" parent="Espacos" unique_id=1839841668 instance=ExtResource("1_qqlt4")]
+position = Vector2(416, 274)
 linha = 3
 coluna = 6
 
 [node name="Espaco_4_0" parent="Espacos" unique_id=1734099539 instance=ExtResource("1_qqlt4")]
+position = Vector2(32, 338)
 linha = 4
 
 [node name="Espaco_4_1" parent="Espacos" unique_id=317551605 instance=ExtResource("1_qqlt4")]
+position = Vector2(96, 338)
 linha = 4
 coluna = 1
 
 [node name="Espaco_4_2" parent="Espacos" unique_id=248410246 instance=ExtResource("1_qqlt4")]
+position = Vector2(160, 338)
 linha = 4
 coluna = 2
 
 [node name="Espaco_4_3" parent="Espacos" unique_id=102679233 instance=ExtResource("1_qqlt4")]
+position = Vector2(224, 338)
 linha = 4
 coluna = 3
 
 [node name="Espaco_4_4" parent="Espacos" unique_id=243903380 instance=ExtResource("1_qqlt4")]
+position = Vector2(288, 338)
 linha = 4
 coluna = 4
 
 [node name="Espaco_4_5" parent="Espacos" unique_id=1582663752 instance=ExtResource("1_qqlt4")]
+position = Vector2(352, 338)
 linha = 4
 coluna = 5
 
 [node name="Espaco_4_6" parent="Espacos" unique_id=551977010 instance=ExtResource("1_qqlt4")]
+position = Vector2(416, 338)
 linha = 4
 coluna = 6
 
 [node name="Espaco_5_0" parent="Espacos" unique_id=1497631823 instance=ExtResource("1_qqlt4")]
+position = Vector2(32, 402)
 linha = 5
 
 [node name="Espaco_5_1" parent="Espacos" unique_id=1697983297 instance=ExtResource("1_qqlt4")]
+position = Vector2(96, 402)
 linha = 5
 coluna = 1
 
 [node name="Espaco_5_2" parent="Espacos" unique_id=65832704 instance=ExtResource("1_qqlt4")]
+position = Vector2(160, 402)
 linha = 5
 coluna = 2
 
 [node name="Espaco_5_3" parent="Espacos" unique_id=726029763 instance=ExtResource("1_qqlt4")]
+position = Vector2(224, 402)
 linha = 5
 coluna = 3
 
 [node name="Espaco_5_4" parent="Espacos" unique_id=1562422552 instance=ExtResource("1_qqlt4")]
+position = Vector2(288, 402)
 linha = 5
 coluna = 4
 
 [node name="Espaco_5_5" parent="Espacos" unique_id=2112176401 instance=ExtResource("1_qqlt4")]
+position = Vector2(352, 402)
 linha = 5
 coluna = 5
 
 [node name="Espaco_5_6" parent="Espacos" unique_id=617239505 instance=ExtResource("1_qqlt4")]
+position = Vector2(416, 402)
 linha = 5
 coluna = 6
 
 [node name="Colunas" type="Node2D" parent="." unique_id=1778390334]
 
 [node name="AreaColuna_0" parent="Colunas" unique_id=1369472653 groups=["AreaColunas"] instance=ExtResource("2_5hp0e")]
+position = Vector2(33, 217)
 
 [node name="AreaColuna_1" parent="Colunas" unique_id=1011460946 groups=["AreaColunas"] instance=ExtResource("2_5hp0e")]
+position = Vector2(97, 217)
 indice_coluna = 1
 
 [node name="AreaColuna_2" parent="Colunas" unique_id=1057008934 groups=["AreaColunas"] instance=ExtResource("2_5hp0e")]
+position = Vector2(160, 217)
 indice_coluna = 2
 
 [node name="AreaColuna_3" parent="Colunas" unique_id=608901613 groups=["AreaColunas"] instance=ExtResource("2_5hp0e")]
+position = Vector2(224, 217)
 indice_coluna = 3
 
 [node name="AreaColuna_4" parent="Colunas" unique_id=1452812684 groups=["AreaColunas"] instance=ExtResource("2_5hp0e")]
+position = Vector2(288, 217)
 indice_coluna = 4
 
 [node name="AreaColuna_5" parent="Colunas" unique_id=1316588668 groups=["AreaColunas"] instance=ExtResource("2_5hp0e")]
+position = Vector2(353, 217)
 indice_coluna = 5
 
 [node name="AreaColuna_6" parent="Colunas" unique_id=1980209556 groups=["AreaColunas"] instance=ExtResource("2_5hp0e")]
+position = Vector2(416, 217)
 indice_coluna = 6

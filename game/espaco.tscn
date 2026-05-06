@@ -14,5 +14,4 @@ metadata/_edit_group_ = true
 texture = ExtResource("2_ex15g")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=79915949]
-position = Vector2(0, -0.5)
 shape = SubResource("RectangleShape2D_257nd")

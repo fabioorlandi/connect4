@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://brjuuda2bhavc" path="res://area_coluna.gd" id="1_a00kx"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_g3wjv"]
+size = Vector2(46, 434)
 
 [node name="AreaColuna" type="Area2D" unique_id=1369472653]
 script = ExtResource("1_a00kx")
