@@ -13,7 +13,11 @@ config_version=5
 config/name="Connect4"
 run/main_scene="uid://di0hpq6wxqjmf"
 config/features=PackedStringArray("4.6", "GL Compatibility")
-config/icon="res://icon.svg"
+config/icon="res://Assets/icon.svg"
+
+[autoload]
+
+Global2D="*uid://cdxuoyc1rawyf"
 
 [physics]
 

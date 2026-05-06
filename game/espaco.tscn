@@ -1,0 +1,18 @@
+[gd_scene format=3 uid="uid://bdivv7q405tvf"]
+
+[ext_resource type="Script" uid="uid://be1sv7sl0bqdx" path="res://espaco.gd" id="1_qredc"]
+[ext_resource type="Texture2D" uid="uid://bbakawt3l7cpr" path="res://Assets/Hole.png" id="2_ex15g"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_257nd"]
+size = Vector2(64, 63)
+
+[node name="Espaco" type="Area2D" unique_id=39952930]
+script = ExtResource("1_qredc")
+metadata/_edit_group_ = true
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1877683072]
+texture = ExtResource("2_ex15g")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=79915949]
+position = Vector2(0, -0.5)
+shape = SubResource("RectangleShape2D_257nd")

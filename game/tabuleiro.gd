@@ -238,20 +238,20 @@ func avaliar_estado(jogador: Jogador) -> int:
 	if verificar_ameaca_tripla(jogador):
 		pontuacaoTabuleiro += 5000
 	if verificar_ameaca_tripla(jogadorOponente):
-		pontuacaoTabuleiro -= 3000
+		pontuacaoTabuleiro -= 30000
 	if verificar_ameaca_dupla(jogador):
 		pontuacaoTabuleiro += 500
 	if verificar_ameaca_dupla(jogadorOponente):
-		pontuacaoTabuleiro -= 200
+		pontuacaoTabuleiro -= 2000
 	
 	for linha in range(6):
 		if self.tabuleiro[linha][3] == jogador.cor:
-			pontuacaoTabuleiro += 50 * (linha + 1)
+			pontuacaoTabuleiro += 500 * (linha + 1)
 
 	for coluna in range(7):
 		for linha in range(5, -1, -1):
 			if self.tabuleiro[linha][coluna] == jogador.cor:
-				pontuacaoTabuleiro += linha * 10
+				pontuacaoTabuleiro += linha * 100
 				break
 
 	return pontuacaoTabuleiro

@@ -2,7 +2,7 @@ extends Node2D
 
 var tabuleiro: Tabuleiro = Tabuleiro.new()
 var ia: Minimax = Minimax.new()
-var profundidade_maxima = 5
+var profundidade_maxima = 4
 
 func _ready() -> void:
 	print("Iniciando jogo...")

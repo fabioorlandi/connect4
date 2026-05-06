@@ -1,6 +1,9 @@
 [gd_scene format=3 uid="uid://di0hpq6wxqjmf"]
 
 [ext_resource type="Script" uid="uid://8tt27ycr7dpm" path="res://connect4.gd" id="1_vj5v0"]
+[ext_resource type="PackedScene" uid="uid://bht3a5xm2cd35" path="res://tabuleiro.tscn" id="2_70131"]
 
 [node name="Connect4" type="Node2D" unique_id=2108255427]
 script = ExtResource("1_vj5v0")
+
+[node name="Tabuleiro" parent="." unique_id=2060084348 instance=ExtResource("2_70131")]
