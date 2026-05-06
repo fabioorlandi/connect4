@@ -182,3 +182,4 @@ indice_coluna = 4
 indice_coluna = 5
 
 [node name="AreaColuna_6" parent="Colunas" unique_id=1980209556 groups=["AreaColunas"] instance=ExtResource("2_5hp0e")]
+indice_coluna = 6

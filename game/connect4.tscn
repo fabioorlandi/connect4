@@ -7,3 +7,5 @@
 script = ExtResource("1_vj5v0")
 
 [node name="Tabuleiro" parent="." unique_id=2060084348 instance=ExtResource("2_70131")]
+
+[node name="Pecas" type="Node2D" parent="." unique_id=1044892417]
