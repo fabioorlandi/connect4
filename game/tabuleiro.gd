@@ -1,11 +1,11 @@
 extends Resource
 class_name Tabuleiro
 
-var jogadorVazio = Jogador.new(Jogador.Cor.Nenhum)
-var jogadorAmarelo = Jogador.new(Jogador.Cor.Amarelo)
-var jogadorVermelho = Jogador.new(Jogador.Cor.Vermelho)
-var jogadorAtual: Jogador
-var jogadorVitoria: Jogador
+var jogador_vazio = Jogador.new(Jogador.Cor.Nenhum)
+var jogador_amarelo = Jogador.new(Jogador.Cor.Amarelo)
+var jogador_vermelho = Jogador.new(Jogador.Cor.Vermelho)
+var jogador_atual: Jogador
+var jogador_vitoria: Jogador
 
 const PESOS_TABULEIRO = [
 	[3, 4, 5, 7, 5, 4, 3],
@@ -19,7 +19,7 @@ const PESOS_TABULEIRO = [
 @export var tabuleiro: Array
 
 func _init() -> void:
-	var vazio = jogadorVazio.cor
+	var vazio = jogador_vazio.cor
 	self.tabuleiro = [
 		[vazio,vazio,vazio,vazio,vazio,vazio,vazio],
 		[vazio,vazio,vazio,vazio,vazio,vazio,vazio],
@@ -28,28 +28,28 @@ func _init() -> void:
 		[vazio,vazio,vazio,vazio,vazio,vazio,vazio],
 		[vazio,vazio,vazio,vazio,vazio,vazio,vazio]
 	]
-	jogadorAtual = jogadorAmarelo
+	jogador_atual = jogador_amarelo
 
 func estado_terminal() -> bool:
-	if verificar_empate() || jogadorVitoria != null:
+	if verificar_empate() || jogador_vitoria != null:
 		return true
 
 	return false
 
 func alternar_jogador() -> void:
-	jogadorAtual = proximo_a_jogar()
+	jogador_atual = proximo_a_jogar()
 
 func proximo_a_jogar() -> Jogador:
-	var espacosVazios = 0
+	var espacos_vazios = 0
 	for linha in range(6):
 		for coluna in range(7):
 			if self.tabuleiro[linha][coluna] == Jogador.Cor.Nenhum:
-				espacosVazios += 1
+				espacos_vazios += 1
 	
-	if espacosVazios % 2 == 0:
-		return jogadorAmarelo 
+	if espacos_vazios % 2 == 0:
+		return jogador_amarelo 
 	else: 
-		return jogadorVermelho
+		return jogador_vermelho
 
 func espacos_jogaveis() -> Array:
 	var espacos = []
@@ -70,16 +70,16 @@ func espacos_jogaveis() -> Array:
 
 func computar_jogada(pos_x: int, pos_y: int) -> void:
 	if self.tabuleiro[pos_x][pos_y] == Jogador.Cor.Nenhum:
-		self.tabuleiro[pos_x][pos_y] = jogadorAtual.cor
+		self.tabuleiro[pos_x][pos_y] = jogador_atual.cor
 		alternar_jogador()
 		
 func movimentar_IA(pos_x: int, pos_y: int, jogador: Jogador) -> Tabuleiro:
 	var novo_tabuleiro = self.duplicate(true)
 	novo_tabuleiro.tabuleiro[pos_x][pos_y] = jogador.cor
-	novo_tabuleiro.jogadorAtual = novo_tabuleiro.proximo_a_jogar()
+	novo_tabuleiro.jogador_atual = novo_tabuleiro.proximo_a_jogar()
 	
 	if novo_tabuleiro.verificar_vitoria(jogador):
-		novo_tabuleiro.jogadorVitoria = jogador
+		novo_tabuleiro.jogador_vitoria = jogador
 
 	return novo_tabuleiro
 
@@ -138,18 +138,18 @@ func verificar_vitoria(jogador: Jogador) -> bool:
 					vitoria = true
 	
 	if vitoria:
-		jogadorVitoria = jogador
+		jogador_vitoria = jogador
 	
 	return vitoria
 
 func verificar_empate() -> bool:
-	var espacosVazios = 0
+	var espacos_vazios = 0
 	for linha in range(6):
 		for coluna in range(7):
 			if self.tabuleiro[linha][coluna] == Jogador.Cor.Nenhum:
-				espacosVazios += 1
+				espacos_vazios += 1
 	
-	return espacosVazios == 0
+	return espacos_vazios == 0
 
 func verificar_ameaca_dupla(jogador: Jogador) -> bool:
 	return verificar_ameaca(jogador, 2, 2)
@@ -222,36 +222,36 @@ func verificar_ameaca(jogador: Jogador, nivelAmeaca: int, casasVazias: int) -> b
 	return possui_ameaca
 
 func avaliar_estado(jogador: Jogador) -> int:
-	var jogadorOponente: Jogador
-	if jogador.cor == jogadorAtual.cor:
-		jogadorOponente = proximo_a_jogar()
+	var jogador_oponente: Jogador
+	if jogador.cor == jogador_atual.cor:
+		jogador_oponente = proximo_a_jogar()
 	else: 
-		jogadorOponente = jogadorAtual
+		jogador_oponente = jogador_atual
 
 	if verificar_vitoria(jogador):
 		return 100000
 	
-	if verificar_vitoria(jogadorOponente):
+	if verificar_vitoria(jogador_oponente):
 		return -50000
 	
-	var pontuacaoTabuleiro = 0
+	var pontuacao_tabuleiro = 0
 	if verificar_ameaca_tripla(jogador):
-		pontuacaoTabuleiro += 5000
-	if verificar_ameaca_tripla(jogadorOponente):
-		pontuacaoTabuleiro -= 30000
+		pontuacao_tabuleiro += 5000
+	if verificar_ameaca_tripla(jogador_oponente):
+		pontuacao_tabuleiro -= 30000
 	if verificar_ameaca_dupla(jogador):
-		pontuacaoTabuleiro += 500
-	if verificar_ameaca_dupla(jogadorOponente):
-		pontuacaoTabuleiro -= 2000
+		pontuacao_tabuleiro += 500
+	if verificar_ameaca_dupla(jogador_oponente):
+		pontuacao_tabuleiro -= 2000
 	
 	for linha in range(6):
 		if self.tabuleiro[linha][3] == jogador.cor:
-			pontuacaoTabuleiro += 500 * (linha + 1)
+			pontuacao_tabuleiro += 500 * (linha + 1)
 
 	for coluna in range(7):
 		for linha in range(5, -1, -1):
 			if self.tabuleiro[linha][coluna] == jogador.cor:
-				pontuacaoTabuleiro += linha * 100
+				pontuacao_tabuleiro += linha * 100
 				break
 
-	return pontuacaoTabuleiro
+	return pontuacao_tabuleiro
