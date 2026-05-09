@@ -2,7 +2,6 @@ extends Node2D
 
 @onready var peca_vermelha = "res://Assets/peca_vermelha.png"
 @onready var peca_amarela = "res://Assets/peca_amarela.png"
-@onready var tabuleiro = $Tabuleiro
 @onready var colunas = $Tabuleiro/Colunas
 @onready var espacos = $Tabuleiro/Espacos
 @onready var pecas = $Pecas
@@ -15,14 +14,6 @@ var tabuleiro_jogo: Tabuleiro
 var ia: Minimax = Minimax.new()
 
 func _ready():
-	$Tabuleiro/Colunas/AreaColuna_0.coluna_selecionada.connect(jogar_na_posicao)
-	$Tabuleiro/Colunas/AreaColuna_1.coluna_selecionada.connect(jogar_na_posicao)
-	$Tabuleiro/Colunas/AreaColuna_2.coluna_selecionada.connect(jogar_na_posicao)
-	$Tabuleiro/Colunas/AreaColuna_3.coluna_selecionada.connect(jogar_na_posicao)
-	$Tabuleiro/Colunas/AreaColuna_4.coluna_selecionada.connect(jogar_na_posicao)
-	$Tabuleiro/Colunas/AreaColuna_5.coluna_selecionada.connect(jogar_na_posicao)
-	$Tabuleiro/Colunas/AreaColuna_6.coluna_selecionada.connect(jogar_na_posicao)
-
 	reiniciar_jogo()
 	for opcao_jogo in opcoes_jogo:
 		opcao_jogo.connect("pressed", _on_opcoes_jogo_pressed.bind(opcao_jogo.name))
@@ -45,14 +36,42 @@ func _on_opcoes_jogo_pressed(name: String) -> void:
 		"JogoAuto":
 			print("Jogo Automático")
 			reiniciar_jogo()
-			processar_jogo_auto()
+			await processar_jogo_auto()
 
 func reiniciar_jogo() -> void:
+	desabilitar_colunas()
+	
 	tabuleiro_jogo = Tabuleiro.new()
+
 	for peca in pecas.get_children():
 		peca.queue_free()
+		
+	for espaco in espacos.get_children():
+		espaco.ocupado = false
+	
+	habilitar_colunas()
+
+func desabilitar_colunas():
+	$Tabuleiro/Colunas/AreaColuna_0.coluna_selecionada.disconnect(jogar_na_posicao)
+	$Tabuleiro/Colunas/AreaColuna_1.coluna_selecionada.disconnect(jogar_na_posicao)
+	$Tabuleiro/Colunas/AreaColuna_2.coluna_selecionada.disconnect(jogar_na_posicao)
+	$Tabuleiro/Colunas/AreaColuna_3.coluna_selecionada.disconnect(jogar_na_posicao)
+	$Tabuleiro/Colunas/AreaColuna_4.coluna_selecionada.disconnect(jogar_na_posicao)
+	$Tabuleiro/Colunas/AreaColuna_5.coluna_selecionada.disconnect(jogar_na_posicao)
+	$Tabuleiro/Colunas/AreaColuna_6.coluna_selecionada.disconnect(jogar_na_posicao)
+
+func habilitar_colunas() :
+	$Tabuleiro/Colunas/AreaColuna_0.coluna_selecionada.connect(jogar_na_posicao)
+	$Tabuleiro/Colunas/AreaColuna_1.coluna_selecionada.connect(jogar_na_posicao)
+	$Tabuleiro/Colunas/AreaColuna_2.coluna_selecionada.connect(jogar_na_posicao)
+	$Tabuleiro/Colunas/AreaColuna_3.coluna_selecionada.connect(jogar_na_posicao)
+	$Tabuleiro/Colunas/AreaColuna_4.coluna_selecionada.connect(jogar_na_posicao)
+	$Tabuleiro/Colunas/AreaColuna_5.coluna_selecionada.connect(jogar_na_posicao)
+	$Tabuleiro/Colunas/AreaColuna_6.coluna_selecionada.connect(jogar_na_posicao)
 
 func processar_jogo_auto() -> void:
+	desabilitar_colunas()
+	
 	while not tabuleiro_jogo.estado_terminal():
 		mostrar_tabuleiro_CLI()
 
@@ -68,8 +87,8 @@ func processar_jogo_auto() -> void:
 		var linha = jogada.movimento[0]
 		var coluna = jogada.movimento[1]
 		
+		await jogar_na_posicao(coluna, linha, false)
 		print("Jogada na posição: [", linha, ", ", coluna, "]")
-		jogar_na_posicao(coluna, linha)
 		
 		tabuleiro_jogo.computar_jogada(linha, coluna)
 		if tabuleiro_jogo.verificar_vitoria(jogador):
@@ -96,8 +115,11 @@ func mostrar_tabuleiro_CLI() -> void:
 		print(linha_str)
 	print("-------------")
 
-func jogar_na_posicao(coluna, linha = null):
+func jogar_na_posicao(coluna, linha = null, gerenciar_colunas = true):
 	if not tabuleiro_jogo.estado_terminal():
+		if gerenciar_colunas:
+			desabilitar_colunas()
+		
 		var jogador = tabuleiro_jogo.jogador_atual
 
 		var espaco_disponivel = pegar_espaco_disponivel(coluna, linha)
@@ -112,10 +134,13 @@ func jogar_na_posicao(coluna, linha = null):
 	
 		peca.global_position = Vector2(espaco_disponivel.global_position.x, -100)
 		espaco_disponivel.ocupado = true
-		peca.jogar_peca(espaco_disponivel.global_position)
-		
+		await peca.jogar_peca(espaco_disponivel.global_position)
+
 		tabuleiro_jogo.computar_jogada(espaco_disponivel.linha, espaco_disponivel.coluna)
 		tabuleiro_jogo.verificar_vitoria(jogador)
+		
+		if gerenciar_colunas:
+			habilitar_colunas()
 
 func pegar_espaco_disponivel(coluna, linha = null):
 	var espaco_disponivel = null
