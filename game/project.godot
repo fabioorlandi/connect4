@@ -13,7 +13,6 @@ config_version=5
 config/name="Connect4"
 run/main_scene="uid://di0hpq6wxqjmf"
 config/features=PackedStringArray("4.6", "GL Compatibility")
-config/icon="res://Assets/icon_red.svg"
 
 [autoload]
 
