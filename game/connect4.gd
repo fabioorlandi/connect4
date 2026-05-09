@@ -54,12 +54,13 @@
 
 extends Node2D
 
-@onready var board = $Tabuleiro
-@onready var columns = $Tabuleiro/Colunas
-@onready var pieces = $Pecas
-@onready var drag_pieces = $DragPieces
+@onready var tabuleiro = $Tabuleiro
+@onready var colunas = $Tabuleiro/Colunas
+@onready var espacos = $Tabuleiro/Espacos
+@onready var pecas = $Pecas
+@onready var pecas_arrastaveis = $DragPieces
 
-var piece_scene = preload("res://peca.tscn")
+var peca_cena = preload("res://peca.tscn")
 
 func _ready():
 	$Tabuleiro/Colunas/AreaColuna_0.coluna_selecionada.connect(jogar_na_coluna)
@@ -70,27 +71,28 @@ func _ready():
 	$Tabuleiro/Colunas/AreaColuna_5.coluna_selecionada.connect(jogar_na_coluna)
 	$Tabuleiro/Colunas/AreaColuna_6.coluna_selecionada.connect(jogar_na_coluna)
 
-	#for drag_piece in drag_pieces.get_children():
-		#drag_piece.dropped_on_column.connect(jogar_na_coluna)
+	if pecas_arrastaveis:
+		for peca_arrastavel in pecas_arrastaveis.get_children():
+			peca_arrastavel.dropped_on_column.connect(jogar_na_coluna)
 
 
 func jogar_na_coluna(coluna):
-	var lowest_slot = null
+	var espaco_disponivel = null
+	var espacos_jogaveis = espacos.get_children()
+	espacos_jogaveis.reverse()
 
-	for slot in board.get_children():
-		if slot.coluna == coluna and not slot.ocupado:
-			if lowest_slot == null or slot.linha < lowest_slot.linha:
-				lowest_slot = slot
+	for espaco in espacos_jogaveis:
+		if espaco.coluna == coluna and not espaco.ocupado:
+			if espaco_disponivel == null or espaco.linha > espaco_disponivel.linha:
+				espaco_disponivel = espaco
 
-	if lowest_slot == null:
+	if espaco_disponivel == null:
 		print("Coluna cheia!")
 		return
 
-	var piece = piece_scene.instantiate()
-	pieces.add_child(piece)
+	var peca = peca_cena.instantiate()
+	pecas.add_child(peca)
 
-	piece.global_position = Vector2(lowest_slot.global_position.x, -100)
-
-	lowest_slot.ocupado = true
-
-	piece.cair_ate(lowest_slot.global_position)
+	peca.global_position = Vector2(espaco_disponivel.global_position.x, -100)
+	espaco_disponivel.ocupado = true
+	peca.jogar_peca(espaco_disponivel.global_position)

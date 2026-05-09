@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://tkbpvntb5gr0"]
 
-[ext_resource type="Script" uid="uid://bjvql18jm3w6i" path="res://peca.gd" id="1_6aony"]
-[ext_resource type="Texture2D" uid="uid://dwcor8umjpr1v" path="res://Assets/icon.svg" id="2_k0ey1"]
+[ext_resource type="Script" path="res://peca.gd" id="1_6aony"]
+[ext_resource type="Texture2D" uid="uid://dwcor8umjpr1v" path="res://Assets/icon_red.svg" id="2_k0ey1"]
 
 [node name="Peca" type="Node2D" unique_id=1971539464]
 script = ExtResource("1_6aony")

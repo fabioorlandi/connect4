@@ -4,8 +4,10 @@
 [ext_resource type="PackedScene" uid="uid://bltk5fhfct35v" path="res://area_coluna.tscn" id="2_5hp0e"]
 
 [node name="Tabuleiro" type="Node2D" unique_id=2060084348]
+metadata/_edit_group_ = true
 
 [node name="Espacos" type="Node2D" parent="." unique_id=873254640]
+metadata/_edit_group_ = true
 
 [node name="Espaco_0_0" parent="Espacos" unique_id=39952930 instance=ExtResource("1_qqlt4")]
 position = Vector2(32, 82)
@@ -205,6 +207,7 @@ linha = 5
 coluna = 6
 
 [node name="Colunas" type="Node2D" parent="." unique_id=1778390334]
+metadata/_edit_group_ = true
 
 [node name="AreaColuna_0" parent="Colunas" unique_id=1369472653 groups=["AreaColunas"] instance=ExtResource("2_5hp0e")]
 position = Vector2(33, 217)
