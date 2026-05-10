@@ -1,0 +1,49 @@
+[gd_scene format=3 uid="uid://cyotjxe8thfhh"]
+
+[ext_resource type="ButtonGroup" uid="uid://c8a2vhsjst2s" path="res://botoes_opcoes_jogo.tres" id="1_rh14k"]
+
+[node name="Interface" type="Control" unique_id=609387248]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="CenterContainer" type="CenterContainer" parent="." unique_id=548426215]
+layout_mode = 1
+anchors_preset = -1
+offset_top = 534.0
+offset_right = 1152.0
+offset_bottom = 648.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="InfoJogo" type="Label" parent="CenterContainer" unique_id=475119840]
+layout_mode = 2
+
+[node name="OpcoesJogo" type="VBoxContainer" parent="." unique_id=1214793982]
+layout_mode = 0
+offset_right = 172.0
+offset_bottom = 136.0
+
+[node name="JogadorContraJogador" type="CheckBox" parent="OpcoesJogo" unique_id=324139081]
+layout_mode = 2
+button_pressed = true
+button_group = ExtResource("1_rh14k")
+text = "Jogador vs Jogador"
+
+[node name="JogadorContraIA" type="CheckBox" parent="OpcoesJogo" unique_id=1736049017]
+layout_mode = 2
+button_group = ExtResource("1_rh14k")
+text = "Jogador vs IA"
+
+[node name="IAContraJogador" type="CheckBox" parent="OpcoesJogo" unique_id=1648883598]
+layout_mode = 2
+button_group = ExtResource("1_rh14k")
+text = "IA vs Jogador"
+
+[node name="JogoAuto" type="CheckBox" parent="OpcoesJogo" unique_id=571773308]
+layout_mode = 2
+button_group = ExtResource("1_rh14k")
+text = "Jogo Automático"

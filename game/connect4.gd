@@ -5,7 +5,8 @@ extends Node2D
 @onready var colunas = $Tabuleiro/Colunas
 @onready var espacos = $Tabuleiro/Espacos
 @onready var pecas = $Pecas
-@onready var opcoes_jogo = $OpcoesJogo.get_children()
+@onready var opcoes_jogo = $Interface/OpcoesJogo.get_children()
+@onready var info_jogo = $Interface/CenterContainer/InfoJogo
 #@onready var pecas_arrastaveis = $DragPieces
 
 var peca_cena = preload("res://peca.tscn")
@@ -42,7 +43,8 @@ func reiniciar_jogo() -> void:
 	desabilitar_colunas()
 	
 	tabuleiro_jogo = Tabuleiro.new()
-
+	info_jogo.text = "Vez do jogador: " + Jogador.Cor.keys()[Jogador.Cor.Amarelo]
+	
 	for peca in pecas.get_children():
 		peca.queue_free()
 		
@@ -74,10 +76,12 @@ func processar_jogo_auto() -> void:
 	
 	while not tabuleiro_jogo.estado_terminal():
 		mostrar_tabuleiro_CLI()
-
-		var jogador = tabuleiro_jogo.jogador_atual
-		print("Vez do jogador: ", "Amarelo" if jogador.cor == Jogador.Cor.Amarelo else "Vermelho")
 		
+		var jogador = tabuleiro_jogo.jogador_atual
+		print("Vez do jogador: ", Jogador.Cor.keys()[jogador.cor])
+		info_jogo.text = "Vez do jogador: " + Jogador.Cor.keys()[jogador.cor]
+		
+		await get_tree().create_timer(0.1).timeout
 		var jogada = ia.jogar(tabuleiro_jogo.duplicate(true), jogador, profundidade_maxima)
 		
 		if jogada.movimento.is_empty():
@@ -95,7 +99,7 @@ func processar_jogo_auto() -> void:
 			mostrar_tabuleiro_CLI()
 			print("Jogador ", "Amarelo" if jogador.cor == Jogador.Cor.Amarelo else "Vermelho", " venceu!")
 			break
-	
+
 	if tabuleiro_jogo.verificar_empate():
 		mostrar_tabuleiro_CLI()
 		print("Empate!")
@@ -121,7 +125,6 @@ func jogar_na_posicao(coluna, linha = null, gerenciar_colunas = true):
 			desabilitar_colunas()
 		
 		var jogador = tabuleiro_jogo.jogador_atual
-
 		var espaco_disponivel = pegar_espaco_disponivel(coluna, linha)
 		if espaco_disponivel == null:
 			print("Coluna cheia!")
@@ -138,6 +141,8 @@ func jogar_na_posicao(coluna, linha = null, gerenciar_colunas = true):
 
 		tabuleiro_jogo.computar_jogada(espaco_disponivel.linha, espaco_disponivel.coluna)
 		tabuleiro_jogo.verificar_vitoria(jogador)
+		
+		info_jogo.text = "Vez do jogador: " + Jogador.Cor.keys()[tabuleiro_jogo.proximo_a_jogar().cor]
 		
 		if gerenciar_colunas:
 			habilitar_colunas()
