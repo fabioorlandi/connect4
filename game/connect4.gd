@@ -133,6 +133,7 @@ func jogar_na_posicao(coluna, linha = null):
 		else:
 			var proximo_a_jogar = tabuleiro_jogo.proximo_a_jogar()
 			info_jogo.text = "Próximo a jogar: " + Jogador.Cor.keys()[proximo_a_jogar.cor]
+			await get_tree().create_timer(0.1).timeout
 			habilitar_colunas()
 	
 			mostrar_tabuleiro_CLI()
