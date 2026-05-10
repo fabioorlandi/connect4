@@ -6,7 +6,9 @@ var jogador_amarelo = Jogador.new(Jogador.Cor.Amarelo, Jogador.TipoJogador.Human
 var jogador_vermelho = Jogador.new(Jogador.Cor.Vermelho, Jogador.TipoJogador.Humano)
 var jogador_atual: Jogador
 var jogador_vitoria: Jogador
+var espacos_com_vitoria: Array = []
 
+@export var tabuleiro: Array
 const PESOS_TABULEIRO = [
 	[3, 4, 5, 7, 5, 4, 3],
 	[4, 6, 8, 10, 8, 6, 4],
@@ -15,8 +17,6 @@ const PESOS_TABULEIRO = [
 	[4, 6, 8, 10, 8, 6, 4],
 	[3, 4, 5, 7, 5, 4, 3]
 ]
-
-@export var tabuleiro: Array
 
 func _init() -> void:
 	var vazio = jogador_vazio.cor
@@ -94,48 +94,57 @@ func verificar_vitoria(jogador: Jogador) -> bool:
 	for linha in range(6):
 		for coluna in range(min_colunas_avaliacao):
 			var cores_array = []
+			var vitoria_array = []
 			for i in range(4):
 				cores_array.append(self.tabuleiro[linha][coluna + i])
+				vitoria_array.append([linha, coluna + i])
 		
 			var count_cor = cores_array.count(jogador.cor)
 			if count_cor == 4:
+				espacos_com_vitoria.append_array(vitoria_array)
 				vitoria = true
 
 	# Verifica vitória do jogador na vertical
-	if !vitoria:
-		for linha in range(min_linhas_avaliacao):
-			for coluna in range(7):
-				var cores_array = []
-				for i in range(4):
-					cores_array.append(self.tabuleiro[linha + i][coluna])
+	for linha in range(min_linhas_avaliacao):
+		for coluna in range(7):
+			var cores_array = []
+			var vitoria_array = []
+			for i in range(4):
+				cores_array.append(self.tabuleiro[linha + i][coluna])
+				vitoria_array.append([linha + i, coluna])
 
-				var count_cor = cores_array.count(jogador.cor)
-				if count_cor == 4:
-					vitoria = true
+			var count_cor = cores_array.count(jogador.cor)
+			if count_cor == 4:
+				espacos_com_vitoria.append_array(vitoria_array)
+				vitoria = true
 
 	# Verifica vitória do jogador na diagonal principal
-	if !vitoria:
-		for linha in range(min_linhas_avaliacao):
-			for coluna in range(min_colunas_avaliacao):
-				var cores_array = []
-				for i in range(4):
-					cores_array.append(self.tabuleiro[linha + i][coluna + i])
+	for linha in range(min_linhas_avaliacao):
+		for coluna in range(min_colunas_avaliacao):
+			var cores_array = []
+			var vitoria_array = []
+			for i in range(4):
+				cores_array.append(self.tabuleiro[linha + i][coluna + i])
+				vitoria_array.append([linha + i, coluna + i])
 
-				var count_cor = cores_array.count(jogador.cor)
-				if count_cor == 4:
-					vitoria = true
+			var count_cor = cores_array.count(jogador.cor)
+			if count_cor == 4:
+				espacos_com_vitoria.append_array(vitoria_array)
+				vitoria = true
 
 	# Verifica vitória do jogador na diagonal secundária
-	if !vitoria:
-		for linha in range(min_linhas_avaliacao):
-			for coluna in range(min_colunas_avaliacao):
-				var cores_array = []
-				for i in range(4):
-					cores_array.append(self.tabuleiro[linha + i][coluna + 3 - i])
+	for linha in range(min_linhas_avaliacao):
+		for coluna in range(min_colunas_avaliacao):
+			var cores_array = []
+			var vitoria_array = []
+			for i in range(4):
+				cores_array.append(self.tabuleiro[linha + i][coluna + 3 - i])
+				cores_array.append([linha + i, coluna + 3 - i])
 
-				var count_cor = cores_array.count(jogador.cor)
-				if count_cor == 4:
-					vitoria = true
+			var count_cor = cores_array.count(jogador.cor)
+			if count_cor == 4:
+				espacos_com_vitoria.append_array(vitoria_array)
+				vitoria = true
 	
 	if vitoria:
 		jogador_vitoria = jogador

@@ -2,6 +2,8 @@ extends Node2D
 
 @onready var peca_vermelha = "res://Assets/peca_vermelha.png"
 @onready var peca_amarela = "res://Assets/peca_amarela.png"
+@onready var animacao_vitoria_vermelho = "vitoria_vermelho"
+@onready var animacao_vitoria_amarelo = "vitoria_amarelo"
 @onready var colunas = $Tabuleiro/Colunas
 @onready var espacos = $Tabuleiro/Espacos
 @onready var pecas = $Pecas
@@ -65,7 +67,7 @@ func desabilitar_colunas():
 	$Tabuleiro/Colunas/AreaColuna_5.coluna_selecionada.disconnect(jogar_na_posicao)
 	$Tabuleiro/Colunas/AreaColuna_6.coluna_selecionada.disconnect(jogar_na_posicao)
 
-func habilitar_colunas() :
+func habilitar_colunas():
 	$Tabuleiro/Colunas/AreaColuna_0.coluna_selecionada.connect(jogar_na_posicao)
 	$Tabuleiro/Colunas/AreaColuna_1.coluna_selecionada.connect(jogar_na_posicao)
 	$Tabuleiro/Colunas/AreaColuna_2.coluna_selecionada.connect(jogar_na_posicao)
@@ -91,6 +93,7 @@ func mostrar_tabuleiro_CLI() -> void:
 
 func jogar_na_posicao_ia() -> void:
 	desabilitar_colunas()
+	await get_tree().create_timer(0.1).timeout
 	
 	var jogador = tabuleiro_jogo.jogador_atual
 	var jogada = ia.jogar(tabuleiro_jogo.duplicate(true), jogador, profundidade_maxima)
@@ -127,9 +130,15 @@ func jogar_na_posicao(coluna, linha = null):
 		if tabuleiro_jogo.verificar_vitoria(jogador):
 			info_jogo.text = "Jogador " + Jogador.Cor.keys()[tabuleiro_jogo.jogador_vitoria.cor] + " venceu!"
 			print("Jogador ", Jogador.Cor.keys()[jogador.cor], " venceu!")
+			
+			marcar_vitoria()
+			
+			mostrar_tabuleiro_CLI()
 		elif tabuleiro_jogo.verificar_empate():
 			info_jogo.text = "Empate!"
 			print("Empate!")
+			
+			mostrar_tabuleiro_CLI()
 		else:
 			var proximo_a_jogar = tabuleiro_jogo.proximo_a_jogar()
 			info_jogo.text = "Próximo a jogar: " + Jogador.Cor.keys()[proximo_a_jogar.cor]
@@ -156,3 +165,17 @@ func pegar_espaco_disponivel(coluna, linha = null):
 					espaco_disponivel = espaco
 
 	return espaco_disponivel
+
+func marcar_vitoria() -> void:
+	var animacao_vitoria = animacao_vitoria_amarelo if tabuleiro_jogo.jogador_vitoria.cor == Jogador.Cor.Amarelo else animacao_vitoria_vermelho
+	
+	var espacos = espacos.get_children()
+	for espaco_vitoria in tabuleiro_jogo.espacos_com_vitoria:
+		var espaco = espacos.filter(func(esp): return esp.linha == espaco_vitoria[0] and esp.coluna == espaco_vitoria[1])[0]
+		
+		var peca = peca_cena.instantiate()
+		pecas.add_child(peca)
+		peca.iniciar_animacao_vitoria(animacao_vitoria)
+		peca.global_position = Vector2(espaco.global_position.x, -100)
+
+		await peca.jogar_peca(espaco.global_position)
