@@ -1,9 +1,9 @@
 extends Resource
 class_name Tabuleiro
 
-var jogador_vazio = Jogador.new(Jogador.Cor.Nenhum)
-var jogador_amarelo = Jogador.new(Jogador.Cor.Amarelo)
-var jogador_vermelho = Jogador.new(Jogador.Cor.Vermelho)
+var jogador_vazio = Jogador.new(Jogador.Cor.Nenhum, Jogador.TipoJogador.Nenhum)
+var jogador_amarelo = Jogador.new(Jogador.Cor.Amarelo, Jogador.TipoJogador.Humano)
+var jogador_vermelho = Jogador.new(Jogador.Cor.Vermelho, Jogador.TipoJogador.Humano)
 var jogador_atual: Jogador
 var jogador_vitoria: Jogador
 

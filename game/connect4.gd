@@ -15,7 +15,7 @@ var tabuleiro_jogo: Tabuleiro
 var ia: Minimax = Minimax.new()
 
 func _ready():
-	reiniciar_jogo()
+	reiniciar_jogo(Jogador.TipoJogador.Humano, Jogador.TipoJogador.Humano)
 	for opcao_jogo in opcoes_jogo:
 		opcao_jogo.connect("pressed", _on_opcoes_jogo_pressed.bind(opcao_jogo.name))
 
@@ -26,24 +26,27 @@ func _ready():
 func _on_opcoes_jogo_pressed(name: String) -> void:
 	match name:
 		"JogadorContraJogador":
-			reiniciar_jogo()
 			print("Jogador vs Jogador")
+			reiniciar_jogo(Jogador.TipoJogador.Humano, Jogador.TipoJogador.Humano)
 		"JogadorContraIA":
-			reiniciar_jogo()
 			print("Jogador vs IA")
+			reiniciar_jogo(Jogador.TipoJogador.Humano, Jogador.TipoJogador.Computador)
 		"IAContraJogador":
-			reiniciar_jogo()
 			print("IA vs Jogador")
+			reiniciar_jogo(Jogador.TipoJogador.Computador, Jogador.TipoJogador.Humano)
+			jogar_na_posicao_ia()
 		"JogoAuto":
 			print("Jogo Automático")
-			reiniciar_jogo()
-			await processar_jogo_auto()
+			reiniciar_jogo(Jogador.TipoJogador.Computador, Jogador.TipoJogador.Computador)
+			jogar_na_posicao_ia()
 
-func reiniciar_jogo() -> void:
+func reiniciar_jogo(tipo_jogador_amarelo, tipo_jogador_vermelho) -> void:
 	desabilitar_colunas()
 	
 	tabuleiro_jogo = Tabuleiro.new()
-	info_jogo.text = "Vez do jogador: " + Jogador.Cor.keys()[Jogador.Cor.Amarelo]
+	tabuleiro_jogo.jogador_amarelo.tipo_jogador = tipo_jogador_amarelo
+	tabuleiro_jogo.jogador_vermelho.tipo_jogador = tipo_jogador_vermelho
+	info_jogo.text = "Próximo a jogar: " + Jogador.Cor.keys()[tabuleiro_jogo.jogador_atual.cor]
 	
 	for peca in pecas.get_children():
 		peca.queue_free()
@@ -71,41 +74,8 @@ func habilitar_colunas() :
 	$Tabuleiro/Colunas/AreaColuna_5.coluna_selecionada.connect(jogar_na_posicao)
 	$Tabuleiro/Colunas/AreaColuna_6.coluna_selecionada.connect(jogar_na_posicao)
 
-func processar_jogo_auto() -> void:
-	desabilitar_colunas()
-	
-	while not tabuleiro_jogo.estado_terminal():
-		mostrar_tabuleiro_CLI()
-		
-		var jogador = tabuleiro_jogo.jogador_atual
-		print("Vez do jogador: ", Jogador.Cor.keys()[jogador.cor])
-		info_jogo.text = "Vez do jogador: " + Jogador.Cor.keys()[jogador.cor]
-		
-		await get_tree().create_timer(0.1).timeout
-		var jogada = ia.jogar(tabuleiro_jogo.duplicate(true), jogador, profundidade_maxima)
-		
-		if jogada.movimento.is_empty():
-			print("Sem movimentos disponíveis!")
-			break
-		
-		var linha = jogada.movimento[0]
-		var coluna = jogada.movimento[1]
-		
-		await jogar_na_posicao(coluna, linha, false)
-		print("Jogada na posição: [", linha, ", ", coluna, "]")
-		
-		tabuleiro_jogo.computar_jogada(linha, coluna)
-		if tabuleiro_jogo.verificar_vitoria(jogador):
-			mostrar_tabuleiro_CLI()
-			print("Jogador ", "Amarelo" if jogador.cor == Jogador.Cor.Amarelo else "Vermelho", " venceu!")
-			break
-
-	if tabuleiro_jogo.verificar_empate():
-		mostrar_tabuleiro_CLI()
-		print("Empate!")
-
 func mostrar_tabuleiro_CLI() -> void:
-	print("\nTabuleiro:")
+	print("Tabuleiro:")
 	for linha in range(6):
 		var linha_str = ""
 		for coluna in range(7):
@@ -117,17 +87,29 @@ func mostrar_tabuleiro_CLI() -> void:
 			else:
 				linha_str += "V "
 		print(linha_str)
-	print("-------------")
+	print("-------------\n")
 
-func jogar_na_posicao(coluna, linha = null, gerenciar_colunas = true):
+func jogar_na_posicao_ia() -> void:
+	desabilitar_colunas()
+	
+	var jogador = tabuleiro_jogo.jogador_atual
+	var jogada = ia.jogar(tabuleiro_jogo.duplicate(true), jogador, profundidade_maxima)
+	var linha = jogada.movimento[0]
+	var coluna = jogada.movimento[1]
+
+	await jogar_na_posicao(coluna, linha)
+
+func jogar_na_posicao(coluna, linha = null):
+	desabilitar_colunas()
+	
 	if not tabuleiro_jogo.estado_terminal():
-		if gerenciar_colunas:
-			desabilitar_colunas()
-		
 		var jogador = tabuleiro_jogo.jogador_atual
+		print("Vez do jogador: ", Jogador.Cor.keys()[jogador.cor])
+		
 		var espaco_disponivel = pegar_espaco_disponivel(coluna, linha)
 		if espaco_disponivel == null:
 			print("Coluna cheia!")
+			info_jogo.text = info_jogo.text + "Coluna cheia!"
 			return null
 		
 		var peca = peca_cena.instantiate()
@@ -140,12 +122,22 @@ func jogar_na_posicao(coluna, linha = null, gerenciar_colunas = true):
 		await peca.jogar_peca(espaco_disponivel.global_position)
 
 		tabuleiro_jogo.computar_jogada(espaco_disponivel.linha, espaco_disponivel.coluna)
-		tabuleiro_jogo.verificar_vitoria(jogador)
+		print("Jogada na posição: [", espaco_disponivel.linha, ", ", espaco_disponivel.coluna, "]")
 		
-		info_jogo.text = "Vez do jogador: " + Jogador.Cor.keys()[tabuleiro_jogo.proximo_a_jogar().cor]
-		
-		if gerenciar_colunas:
+		if tabuleiro_jogo.verificar_vitoria(jogador):
+			info_jogo.text = "Jogador " + Jogador.Cor.keys()[tabuleiro_jogo.jogador_vitoria.cor] + " venceu!"
+			print("Jogador ", Jogador.Cor.keys()[jogador.cor], " venceu!")
+		elif tabuleiro_jogo.verificar_empate():
+			info_jogo.text = "Empate!"
+			print("Empate!")
+		else:
+			var proximo_a_jogar = tabuleiro_jogo.proximo_a_jogar()
+			info_jogo.text = "Próximo a jogar: " + Jogador.Cor.keys()[proximo_a_jogar.cor]
 			habilitar_colunas()
+	
+			mostrar_tabuleiro_CLI()
+			if tabuleiro_jogo.proximo_a_jogar().tipo_jogador == Jogador.TipoJogador.Computador:
+				jogar_na_posicao_ia()
 
 func pegar_espaco_disponivel(coluna, linha = null):
 	var espaco_disponivel = null
