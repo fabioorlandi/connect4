@@ -9,9 +9,10 @@ extends Node2D
 @onready var pecas = $Pecas
 @onready var opcoes_jogo = $Interface/OpcoesJogo.get_children()
 @onready var info_jogo = $Interface/CenterContainer/InfoJogo
-#@onready var pecas_arrastaveis = $DragPieces
+@onready var pecas_arrastaveis = $PecasArrastaveis
 
 var peca_cena = preload("res://peca.tscn")
+var peca_arrastavel_cena = preload("res://peca_arrastavel.tscn")
 var profundidade_maxima = 4
 var tabuleiro_jogo: Tabuleiro
 var ia: Minimax = Minimax.new()
@@ -20,10 +21,6 @@ func _ready():
 	reiniciar_jogo(Jogador.TipoJogador.Humano, Jogador.TipoJogador.Humano)
 	for opcao_jogo in opcoes_jogo:
 		opcao_jogo.connect("pressed", _on_opcoes_jogo_pressed.bind(opcao_jogo.name))
-
-	#if pecas_arrastaveis:
-		#for peca_arrastavel in pecas_arrastaveis.get_children():
-			#peca_arrastavel.dropped_on_column.connect(jogar_na_posicao)
 
 func _on_opcoes_jogo_pressed(name: String) -> void:
 	match name:
@@ -44,17 +41,34 @@ func _on_opcoes_jogo_pressed(name: String) -> void:
 
 func reiniciar_jogo(tipo_jogador_amarelo, tipo_jogador_vermelho) -> void:
 	desabilitar_colunas()
-	
+
 	tabuleiro_jogo = Tabuleiro.new()
 	tabuleiro_jogo.jogador_amarelo.tipo_jogador = tipo_jogador_amarelo
 	tabuleiro_jogo.jogador_vermelho.tipo_jogador = tipo_jogador_vermelho
 	info_jogo.text = "Próximo a jogar: " + Jogador.Cor.keys()[tabuleiro_jogo.jogador_atual.cor]
 	
+	for peca_arrastavel in pecas_arrastaveis.get_children():
+		peca_arrastavel.queue_free()
 	for peca in pecas.get_children():
 		peca.queue_free()
-		
 	for espaco in espacos.get_children():
 		espaco.ocupado = false
+	for i in range(20):
+		var peca_arrastavel = peca_arrastavel_cena.instantiate()
+		peca_arrastavel.cor_jogador = Jogador.Cor.Amarelo
+		peca_arrastavel.global_position = Vector2(randi_range(50, 200), 300 + i * 10)
+		peca_arrastavel.mudar_textura_jogador(peca_amarela)
+		peca_arrastavel.jogada_na_coluna.connect(jogar_na_posicao_arrastando)
+		
+		pecas_arrastaveis.add_child(peca_arrastavel)
+	for i in range(20):
+		var peca_arrastavel = peca_arrastavel_cena.instantiate()
+		peca_arrastavel.cor_jogador = Jogador.Cor.Vermelho
+		peca_arrastavel.global_position = Vector2(randi_range(950, 1100), 300 + i * 10)
+		peca_arrastavel.mudar_textura_jogador(peca_vermelha)
+		peca_arrastavel.jogada_na_coluna.connect(jogar_na_posicao_arrastando)
+		
+		pecas_arrastaveis.add_child(peca_arrastavel)
 	
 	habilitar_colunas()
 
@@ -91,7 +105,7 @@ func mostrar_tabuleiro_CLI() -> void:
 		print(linha_str)
 	print("-------------\n")
 
-func jogar_na_posicao_ia() -> void:
+func jogar_na_posicao_ia():
 	desabilitar_colunas()
 	await get_tree().create_timer(0.1).timeout
 	
@@ -101,6 +115,13 @@ func jogar_na_posicao_ia() -> void:
 	var coluna = jogada.movimento[1]
 
 	await jogar_na_posicao(coluna, linha)
+
+func jogar_na_posicao_arrastando(cor_jogador, coluna):
+	if not cor_jogador == tabuleiro_jogo.jogador_atual.cor:
+		print("Peça inválida!")
+		return
+
+	await jogar_na_posicao(coluna)
 
 func jogar_na_posicao(coluna, linha = null):
 	desabilitar_colunas()
@@ -112,7 +133,6 @@ func jogar_na_posicao(coluna, linha = null):
 		var espaco_disponivel = pegar_espaco_disponivel(coluna, linha)
 		if espaco_disponivel == null:
 			print("Coluna cheia!")
-			info_jogo.text = info_jogo.text + "Coluna cheia!"
 			return null
 		
 		var peca = peca_cena.instantiate()

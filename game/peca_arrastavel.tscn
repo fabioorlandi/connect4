@@ -1,0 +1,20 @@
+[gd_scene format=3 uid="uid://bmk5l4habqbw3"]
+
+[ext_resource type="Script" uid="uid://dwcpx0lt8ke2m" path="res://peca_arrastavel.gd" id="1_knmou"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_vep2n"]
+
+[node name="PecaArrastavel" type="Area2D" unique_id=1728364937]
+scale = Vector2(0.5, 0.5)
+script = ExtResource("1_knmou")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=818509077]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=51678689]
+scale = Vector2(2, 2)
+shape = SubResource("RectangleShape2D_vep2n")
+
+[connection signal="area_entered" from="." to="." method="_on_area_entered"]
+[connection signal="area_exited" from="." to="." method="_on_area_exited"]
+[connection signal="mouse_entered" from="." to="." method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="." to="." method="_on_mouse_exited"]

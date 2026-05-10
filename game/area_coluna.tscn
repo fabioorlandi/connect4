@@ -1,11 +1,11 @@
 [gd_scene format=3 uid="uid://bltk5fhfct35v"]
 
-[ext_resource type="Script" path="res://area_coluna.gd" id="1_a00kx"]
+[ext_resource type="Script" uid="uid://brjuuda2bhavc" path="res://area_coluna.gd" id="1_a00kx"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_g3wjv"]
 size = Vector2(46, 434)
 
-[node name="AreaColuna" type="Area2D" unique_id=1369472653]
+[node name="AreaColuna" type="Area2D" unique_id=1369472653 groups=["AreaColunas"]]
 script = ExtResource("1_a00kx")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1727352321]

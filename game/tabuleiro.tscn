@@ -209,29 +209,29 @@ coluna = 6
 [node name="Colunas" type="Node2D" parent="." unique_id=1778390334]
 metadata/_edit_group_ = true
 
-[node name="AreaColuna_0" parent="Colunas" unique_id=1369472653 groups=["AreaColunas"] instance=ExtResource("2_5hp0e")]
+[node name="AreaColuna_0" parent="Colunas" unique_id=1369472653 instance=ExtResource("2_5hp0e")]
 position = Vector2(33, 217)
 
-[node name="AreaColuna_1" parent="Colunas" unique_id=1011460946 groups=["AreaColunas"] instance=ExtResource("2_5hp0e")]
+[node name="AreaColuna_1" parent="Colunas" unique_id=1011460946 instance=ExtResource("2_5hp0e")]
 position = Vector2(97, 217)
 indice_coluna = 1
 
-[node name="AreaColuna_2" parent="Colunas" unique_id=1057008934 groups=["AreaColunas"] instance=ExtResource("2_5hp0e")]
+[node name="AreaColuna_2" parent="Colunas" unique_id=1057008934 instance=ExtResource("2_5hp0e")]
 position = Vector2(160, 217)
 indice_coluna = 2
 
-[node name="AreaColuna_3" parent="Colunas" unique_id=608901613 groups=["AreaColunas"] instance=ExtResource("2_5hp0e")]
+[node name="AreaColuna_3" parent="Colunas" unique_id=608901613 instance=ExtResource("2_5hp0e")]
 position = Vector2(224, 217)
 indice_coluna = 3
 
-[node name="AreaColuna_4" parent="Colunas" unique_id=1452812684 groups=["AreaColunas"] instance=ExtResource("2_5hp0e")]
+[node name="AreaColuna_4" parent="Colunas" unique_id=1452812684 instance=ExtResource("2_5hp0e")]
 position = Vector2(288, 217)
 indice_coluna = 4
 
-[node name="AreaColuna_5" parent="Colunas" unique_id=1316588668 groups=["AreaColunas"] instance=ExtResource("2_5hp0e")]
+[node name="AreaColuna_5" parent="Colunas" unique_id=1316588668 instance=ExtResource("2_5hp0e")]
 position = Vector2(353, 217)
 indice_coluna = 5
 
-[node name="AreaColuna_6" parent="Colunas" unique_id=1980209556 groups=["AreaColunas"] instance=ExtResource("2_5hp0e")]
+[node name="AreaColuna_6" parent="Colunas" unique_id=1980209556 instance=ExtResource("2_5hp0e")]
 position = Vector2(416, 217)
 indice_coluna = 6
