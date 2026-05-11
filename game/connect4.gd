@@ -73,22 +73,44 @@ func reiniciar_jogo(tipo_jogador_amarelo, tipo_jogador_vermelho) -> void:
 	habilitar_colunas()
 
 func desabilitar_colunas():
-	$Tabuleiro/Colunas/AreaColuna_0.coluna_selecionada.disconnect(jogar_na_posicao)
-	$Tabuleiro/Colunas/AreaColuna_1.coluna_selecionada.disconnect(jogar_na_posicao)
-	$Tabuleiro/Colunas/AreaColuna_2.coluna_selecionada.disconnect(jogar_na_posicao)
-	$Tabuleiro/Colunas/AreaColuna_3.coluna_selecionada.disconnect(jogar_na_posicao)
-	$Tabuleiro/Colunas/AreaColuna_4.coluna_selecionada.disconnect(jogar_na_posicao)
-	$Tabuleiro/Colunas/AreaColuna_5.coluna_selecionada.disconnect(jogar_na_posicao)
-	$Tabuleiro/Colunas/AreaColuna_6.coluna_selecionada.disconnect(jogar_na_posicao)
+	if $Tabuleiro/Colunas/AreaColuna_0.is_connected("coluna_selecionada", jogar_na_posicao):
+		$Tabuleiro/Colunas/AreaColuna_0.coluna_selecionada.disconnect(jogar_na_posicao)
+	if $Tabuleiro/Colunas/AreaColuna_1.is_connected("coluna_selecionada", jogar_na_posicao):
+		$Tabuleiro/Colunas/AreaColuna_1.coluna_selecionada.disconnect(jogar_na_posicao)
+	if $Tabuleiro/Colunas/AreaColuna_2.is_connected("coluna_selecionada", jogar_na_posicao):
+		$Tabuleiro/Colunas/AreaColuna_2.coluna_selecionada.disconnect(jogar_na_posicao)
+	if $Tabuleiro/Colunas/AreaColuna_3.is_connected("coluna_selecionada", jogar_na_posicao):
+		$Tabuleiro/Colunas/AreaColuna_3.coluna_selecionada.disconnect(jogar_na_posicao)
+	if $Tabuleiro/Colunas/AreaColuna_4.is_connected("coluna_selecionada", jogar_na_posicao):
+		$Tabuleiro/Colunas/AreaColuna_4.coluna_selecionada.disconnect(jogar_na_posicao)
+	if $Tabuleiro/Colunas/AreaColuna_5.is_connected("coluna_selecionada", jogar_na_posicao):
+		$Tabuleiro/Colunas/AreaColuna_5.coluna_selecionada.disconnect(jogar_na_posicao)
+	if $Tabuleiro/Colunas/AreaColuna_6.is_connected("coluna_selecionada", jogar_na_posicao):
+		$Tabuleiro/Colunas/AreaColuna_6.coluna_selecionada.disconnect(jogar_na_posicao)
+		
+	for peca_arrastavel in $PecasArrastaveis.get_children():
+		if peca_arrastavel.is_connected("jogada_na_coluna", jogar_na_posicao_arrastando):
+			peca_arrastavel.jogada_na_coluna.disconnect(jogar_na_posicao_arrastando)
 
 func habilitar_colunas():
-	$Tabuleiro/Colunas/AreaColuna_0.coluna_selecionada.connect(jogar_na_posicao)
-	$Tabuleiro/Colunas/AreaColuna_1.coluna_selecionada.connect(jogar_na_posicao)
-	$Tabuleiro/Colunas/AreaColuna_2.coluna_selecionada.connect(jogar_na_posicao)
-	$Tabuleiro/Colunas/AreaColuna_3.coluna_selecionada.connect(jogar_na_posicao)
-	$Tabuleiro/Colunas/AreaColuna_4.coluna_selecionada.connect(jogar_na_posicao)
-	$Tabuleiro/Colunas/AreaColuna_5.coluna_selecionada.connect(jogar_na_posicao)
-	$Tabuleiro/Colunas/AreaColuna_6.coluna_selecionada.connect(jogar_na_posicao)
+	if not $Tabuleiro/Colunas/AreaColuna_0.is_connected("coluna_selecionada", jogar_na_posicao):
+		$Tabuleiro/Colunas/AreaColuna_0.coluna_selecionada.connect(jogar_na_posicao)
+	if not $Tabuleiro/Colunas/AreaColuna_1.is_connected("coluna_selecionada", jogar_na_posicao):
+		$Tabuleiro/Colunas/AreaColuna_1.coluna_selecionada.connect(jogar_na_posicao)
+	if not $Tabuleiro/Colunas/AreaColuna_2.is_connected("coluna_selecionada", jogar_na_posicao):
+		$Tabuleiro/Colunas/AreaColuna_2.coluna_selecionada.connect(jogar_na_posicao)
+	if not $Tabuleiro/Colunas/AreaColuna_3.is_connected("coluna_selecionada", jogar_na_posicao):
+		$Tabuleiro/Colunas/AreaColuna_3.coluna_selecionada.connect(jogar_na_posicao)
+	if not $Tabuleiro/Colunas/AreaColuna_4.is_connected("coluna_selecionada", jogar_na_posicao):
+		$Tabuleiro/Colunas/AreaColuna_4.coluna_selecionada.connect(jogar_na_posicao)
+	if not $Tabuleiro/Colunas/AreaColuna_5.is_connected("coluna_selecionada", jogar_na_posicao):
+		$Tabuleiro/Colunas/AreaColuna_5.coluna_selecionada.connect(jogar_na_posicao)
+	if not $Tabuleiro/Colunas/AreaColuna_6.is_connected("coluna_selecionada", jogar_na_posicao):
+		$Tabuleiro/Colunas/AreaColuna_6.coluna_selecionada.connect(jogar_na_posicao)
+		
+	for peca_arrastavel in $PecasArrastaveis.get_children():
+		if not peca_arrastavel.is_connected("jogada_na_coluna", jogar_na_posicao_arrastando):
+			peca_arrastavel.jogada_na_coluna.connect(jogar_na_posicao_arrastando)
 
 func mostrar_tabuleiro_CLI() -> void:
 	print("Tabuleiro:")
