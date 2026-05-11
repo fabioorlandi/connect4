@@ -139,7 +139,7 @@ func verificar_vitoria(jogador: Jogador) -> bool:
 			var vitoria_array = []
 			for i in range(4):
 				cores_array.append(self.tabuleiro[linha + i][coluna + 3 - i])
-				cores_array.append([linha + i, coluna + 3 - i])
+				vitoria_array.append([linha + i, coluna + 3 - i])
 
 			var count_cor = cores_array.count(jogador.cor)
 			if count_cor == 4:

@@ -188,9 +188,13 @@ func pegar_espaco_disponivel(coluna, linha = null):
 
 func marcar_vitoria() -> void:
 	var animacao_vitoria = animacao_vitoria_amarelo if tabuleiro_jogo.jogador_vitoria.cor == Jogador.Cor.Amarelo else animacao_vitoria_vermelho
-	
 	var espacos = espacos.get_children()
+	
+	var vitorias_multiplas = {}
 	for espaco_vitoria in tabuleiro_jogo.espacos_com_vitoria:
+		if vitorias_multiplas.has(espaco_vitoria):
+			continue
+		
 		var espaco = espacos.filter(func(esp): return esp.linha == espaco_vitoria[0] and esp.coluna == espaco_vitoria[1])[0]
 		
 		var peca = peca_cena.instantiate()
@@ -199,3 +203,5 @@ func marcar_vitoria() -> void:
 		peca.global_position = Vector2(espaco.global_position.x, -100)
 
 		await peca.jogar_peca(espaco.global_position)
+		
+		vitorias_multiplas[espaco_vitoria] = true
