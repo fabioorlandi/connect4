@@ -33,11 +33,11 @@ func _on_opcoes_jogo_pressed(name: String) -> void:
 		"IAContraJogador":
 			print("IA vs Jogador")
 			reiniciar_jogo(Jogador.TipoJogador.Computador, Jogador.TipoJogador.Humano)
-			jogar_na_posicao_ia()
+			jogar_na_posicao_IA()
 		"JogoAuto":
 			print("Jogo Automático")
 			reiniciar_jogo(Jogador.TipoJogador.Computador, Jogador.TipoJogador.Computador)
-			jogar_na_posicao_ia()
+			jogar_na_posicao_IA()
 
 func reiniciar_jogo(tipo_jogador_amarelo, tipo_jogador_vermelho) -> void:
 	desabilitar_colunas()
@@ -105,7 +105,7 @@ func mostrar_tabuleiro_CLI() -> void:
 		print(linha_str)
 	print("-------------\n")
 
-func jogar_na_posicao_ia():
+func jogar_na_posicao_IA():
 	desabilitar_colunas()
 	await get_tree().create_timer(0.1).timeout
 	
@@ -167,7 +167,7 @@ func jogar_na_posicao(coluna, linha = null):
 	
 			mostrar_tabuleiro_CLI()
 			if tabuleiro_jogo.proximo_a_jogar().tipo_jogador == Jogador.TipoJogador.Computador:
-				jogar_na_posicao_ia()
+				jogar_na_posicao_IA()
 
 func pegar_espaco_disponivel(coluna, linha = null):
 	var espaco_disponivel = null
