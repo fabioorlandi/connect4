@@ -17,6 +17,7 @@ var peca_cena = preload("res://peca.tscn")
 var peca_arrastavel_cena = preload("res://peca_arrastavel.tscn")
 var profundidade_maxima = 4
 var tabuleiro_jogo: Tabuleiro
+var thread: Thread = Thread.new()
 var ia: Minimax = Minimax.new()
 
 func _ready():
@@ -35,11 +36,11 @@ func _on_opcoes_jogo_pressed(name: String) -> void:
 		"IAContraJogador":
 			print("IA vs Jogador")
 			reiniciar_jogo(Jogador.TipoJogador.Computador, Jogador.TipoJogador.Humano)
-			jogar_na_posicao_IA()
+			await jogar_na_posicao_IA()
 		"IAContraIA":
 			print("IA vs IA")
 			reiniciar_jogo(Jogador.TipoJogador.Computador, Jogador.TipoJogador.Computador)
-			jogar_na_posicao_IA()
+			await jogar_na_posicao_IA()
 
 func reiniciar_jogo(tipo_jogador_amarelo, tipo_jogador_vermelho) -> void:
 	desabilitar_colunas()
@@ -131,13 +132,17 @@ func mostrar_tabuleiro_CLI() -> void:
 
 func jogar_na_posicao_IA():
 	desabilitar_colunas()
-	await get_tree().create_timer(0.1).timeout
-	
+	thread.start(iniciar_jogada_IA)
+
+func iniciar_jogada_IA():
 	var jogador = tabuleiro_jogo.jogador_atual
 	var jogada = ia.jogar(tabuleiro_jogo.duplicate(true), jogador, profundidade_maxima)
+	call_deferred("finalizar_jogada_IA", jogada)
+
+func finalizar_jogada_IA(jogada: Jogada):
+	thread.wait_to_finish()
 	var linha = jogada.movimento[0]
 	var coluna = jogada.movimento[1]
-
 	await jogar_na_posicao(coluna, linha)
 
 func jogar_na_posicao_arrastando(cor_jogador, coluna):
@@ -159,7 +164,7 @@ func jogar_na_posicao(coluna, linha = null):
 		if espaco_disponivel == null:
 			print("Coluna cheia!")
 			habilitar_colunas()
-			return null
+			return
 		
 		var peca = peca_cena.instantiate()
 		var cor_peca = peca_amarela if jogador.cor == Jogador.Cor.Amarelo else peca_vermelha
@@ -188,12 +193,11 @@ func jogar_na_posicao(coluna, linha = null):
 		else:
 			var proximo_a_jogar = tabuleiro_jogo.proximo_a_jogar()
 			info_jogo.text = "Próximo a jogar: " + Jogador.Cor.keys()[proximo_a_jogar.cor]
-			await get_tree().create_timer(0.1).timeout
 			habilitar_colunas()
 	
 			mostrar_tabuleiro_CLI()
 			if tabuleiro_jogo.proximo_a_jogar().tipo_jogador == Jogador.TipoJogador.Computador:
-				jogar_na_posicao_IA()
+				await jogar_na_posicao_IA()
 
 func pegar_espaco_disponivel(coluna, linha = null):
 	var espaco_disponivel = null
