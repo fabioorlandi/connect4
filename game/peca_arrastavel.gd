@@ -2,6 +2,11 @@ extends Area2D
 
 signal jogada_na_coluna(cor_jogador, indice_coluna)
 
+@onready var peca_vermelha = "res://Assets/peca_vermelha.png"
+@onready var peca_amarela = "res://Assets/peca_amarela.png"
+@onready var peca_amarela_mesa = "res://Assets/peca_amarela_mesa.png"
+@onready var peca_vermelha_mesa = "res://Assets/peca_vermelha_mesa.png"
+
 var cor_jogador := Jogador.Cor.Nenhum
 var mouse_over := false
 var dragging := false
@@ -9,7 +14,14 @@ var posicao_inicial: Vector2
 var hovering_columns: Array[Area2D] = []
 
 func _process(delta):
+	var cor_peca = peca_amarela if cor_jogador == Jogador.Cor.Amarelo else peca_vermelha
+	var cor_peca_mesa = peca_amarela_mesa if cor_jogador == Jogador.Cor.Amarelo else peca_vermelha_mesa
+		
 	if mouse_over and Input.is_action_just_pressed("click") and not Global2D.is_dragging:
+		self.mudar_textura_jogador(cor_peca)
+		self.scale = Vector2(0.5, 0.5)
+		self.z_index = 7
+		
 		posicao_inicial = global_position
 		dragging = true
 		Global2D.is_dragging = true
@@ -20,6 +32,7 @@ func _process(delta):
 	if dragging and Input.is_action_just_released("click"):
 		dragging = false
 		Global2D.is_dragging = false
+		self.mudar_textura_jogador(cor_peca_mesa)
 
 		if hovering_columns.size() > 0:
 			var coluna = hovering_columns[-1]
@@ -31,7 +44,7 @@ func _process(delta):
 func _on_mouse_entered():
 	if not Global2D.is_dragging:
 		mouse_over = true
-		scale = Vector2(0.75, 0.75)
+		scale = Vector2(0.65, 0.65)
 
 func _on_mouse_exited():
 	if not dragging:

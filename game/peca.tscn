@@ -1,7 +1,6 @@
 [gd_scene format=3 uid="uid://tkbpvntb5gr0"]
 
 [ext_resource type="Script" uid="uid://bjvql18jm3w6i" path="res://peca.gd" id="1_6aony"]
-[ext_resource type="Texture2D" uid="uid://dljbssyq0lh4v" path="res://Assets/peca.svg" id="2_6aony"]
 [ext_resource type="Texture2D" uid="uid://q3onknoyob6y" path="res://Assets/peca_amarela.png" id="3_n8aky"]
 [ext_resource type="Texture2D" uid="uid://bq3kxxwey0svu" path="res://Assets/peca_amarela_invertida.png" id="4_pg35c"]
 [ext_resource type="Texture2D" uid="uid://ct65h4ly2870j" path="res://Assets/peca_vermelha.png" id="5_ub8d2"]
@@ -37,9 +36,11 @@ scale = Vector2(0.5, 0.5)
 script = ExtResource("1_6aony")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=1798881051]
-texture = ExtResource("2_6aony")
+scale = Vector2(0.5, 0.5)
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=794559317]
 visible = false
+scale = Vector2(0.5, 0.5)
 sprite_frames = SubResource("SpriteFrames_wicik")
-animation = &"vitoria_vermelho"
+animation = &"vitoria_amarelo"
+frame_progress = 0.63879055
