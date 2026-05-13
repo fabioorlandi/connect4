@@ -2,6 +2,8 @@ extends Node2D
 
 @onready var peca_vermelha = "res://Assets/peca_vermelha.png"
 @onready var peca_amarela = "res://Assets/peca_amarela.png"
+@onready var peca_amarela_mesa = "res://Assets/peca_amarela_mesa.png"
+@onready var peca_vermelha_mesa = "res://Assets/peca_vermelha_mesa.png"
 @onready var animacao_vitoria_vermelho = "vitoria_vermelho"
 @onready var animacao_vitoria_amarelo = "vitoria_amarelo"
 @onready var colunas = $Tabuleiro/Colunas
@@ -34,8 +36,8 @@ func _on_opcoes_jogo_pressed(name: String) -> void:
 			print("IA vs Jogador")
 			reiniciar_jogo(Jogador.TipoJogador.Computador, Jogador.TipoJogador.Humano)
 			jogar_na_posicao_IA()
-		"JogoAuto":
-			print("Jogo Automático")
+		"IAContraIA":
+			print("IA vs IA")
 			reiniciar_jogo(Jogador.TipoJogador.Computador, Jogador.TipoJogador.Computador)
 			jogar_na_posicao_IA()
 
@@ -56,16 +58,16 @@ func reiniciar_jogo(tipo_jogador_amarelo, tipo_jogador_vermelho) -> void:
 	for i in range(20):
 		var peca_arrastavel = peca_arrastavel_cena.instantiate()
 		peca_arrastavel.cor_jogador = Jogador.Cor.Amarelo
-		peca_arrastavel.global_position = Vector2(randi_range(50, 200), 300 + i * 10)
-		peca_arrastavel.mudar_textura_jogador(peca_amarela)
+		peca_arrastavel.global_position = Vector2(randi_range(25, 225), 475 + i * 5)
+		peca_arrastavel.mudar_textura_jogador(peca_amarela_mesa)
 		peca_arrastavel.jogada_na_coluna.connect(jogar_na_posicao_arrastando)
 		
 		pecas_arrastaveis.add_child(peca_arrastavel)
 	for i in range(20):
 		var peca_arrastavel = peca_arrastavel_cena.instantiate()
 		peca_arrastavel.cor_jogador = Jogador.Cor.Vermelho
-		peca_arrastavel.global_position = Vector2(randi_range(950, 1100), 300 + i * 10)
-		peca_arrastavel.mudar_textura_jogador(peca_vermelha)
+		peca_arrastavel.global_position = Vector2(randi_range(900, 1125), 475 + i * 5)
+		peca_arrastavel.mudar_textura_jogador(peca_vermelha_mesa)
 		peca_arrastavel.jogada_na_coluna.connect(jogar_na_posicao_arrastando)
 		
 		pecas_arrastaveis.add_child(peca_arrastavel)
@@ -142,8 +144,9 @@ func jogar_na_posicao_arrastando(cor_jogador, coluna):
 	if not cor_jogador == tabuleiro_jogo.jogador_atual.cor:
 		print("Peça inválida!")
 		return
-
-	await jogar_na_posicao(coluna)
+	else:
+		#peca.queue_free()
+		await jogar_na_posicao(coluna)
 
 func jogar_na_posicao(coluna, linha = null):
 	desabilitar_colunas()
@@ -155,6 +158,7 @@ func jogar_na_posicao(coluna, linha = null):
 		var espaco_disponivel = pegar_espaco_disponivel(coluna, linha)
 		if espaco_disponivel == null:
 			print("Coluna cheia!")
+			habilitar_colunas()
 			return null
 		
 		var peca = peca_cena.instantiate()
@@ -162,7 +166,7 @@ func jogar_na_posicao(coluna, linha = null):
 		peca.mudar_textura_jogador(cor_peca)
 		pecas.add_child(peca)
 	
-		peca.global_position = Vector2(espaco_disponivel.global_position.x, -100)
+		peca.global_position = Vector2(espaco_disponivel.global_position.x, 50)
 		espaco_disponivel.ocupado = true
 		await peca.jogar_peca(espaco_disponivel.global_position)
 
@@ -222,7 +226,7 @@ func marcar_vitoria() -> void:
 		var peca = peca_cena.instantiate()
 		pecas.add_child(peca)
 		peca.iniciar_animacao_vitoria(animacao_vitoria)
-		peca.global_position = Vector2(espaco.global_position.x, -100)
+		peca.global_position = Vector2(espaco.global_position.x, 50)
 
 		await peca.jogar_peca(espaco.global_position)
 		

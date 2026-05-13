@@ -1,14 +1,19 @@
 [gd_scene format=3 uid="uid://cyotjxe8thfhh"]
 
 [ext_resource type="ButtonGroup" uid="uid://c8a2vhsjst2s" path="res://botoes_opcoes_jogo.tres" id="1_rh14k"]
+[ext_resource type="Texture2D" uid="uid://xcga42mkni53" path="res://Assets/fundo_mesa.png" id="2_kyn48"]
+[ext_resource type="Texture2D" uid="uid://dbm1aangt3up3" path="res://Assets/computador.png" id="3_4rbkc"]
+[ext_resource type="Texture2D" uid="uid://bxi3gfcrrmj57" path="res://Assets/tabuleiro.png" id="4_pt1ru"]
 
 [node name="Interface" type="Control" unique_id=609387248]
+z_index = 1
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 1
 
 [node name="CenterContainer" type="CenterContainer" parent="." unique_id=548426215]
 layout_mode = 1
@@ -43,7 +48,34 @@ layout_mode = 2
 button_group = ExtResource("1_rh14k")
 text = "IA vs Jogador"
 
-[node name="JogoAuto" type="CheckBox" parent="OpcoesJogo" unique_id=571773308]
+[node name="IAContraIA" type="CheckBox" parent="OpcoesJogo" unique_id=571773308]
 layout_mode = 2
 button_group = ExtResource("1_rh14k")
-text = "Jogo Automático"
+text = "IA vs IA"
+
+[node name="TextureRect" type="TextureRect" parent="." unique_id=1608889225]
+z_index = -1
+layout_mode = 1
+offset_right = 1152.0
+offset_bottom = 648.0
+mouse_filter = 2
+texture = ExtResource("2_kyn48")
+expand_mode = 1
+
+[node name="TextureRect2" type="TextureRect" parent="." unique_id=28704615]
+z_index = -1
+layout_mode = 1
+offset_right = 1152.0
+offset_bottom = 648.0
+mouse_filter = 2
+texture = ExtResource("3_4rbkc")
+expand_mode = 1
+
+[node name="TextureRect3" type="TextureRect" parent="." unique_id=387286906]
+z_index = -1
+layout_mode = 0
+offset_right = 1152.0
+offset_bottom = 648.0
+mouse_filter = 2
+texture = ExtResource("4_pt1ru")
+expand_mode = 1
