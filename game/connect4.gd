@@ -15,7 +15,7 @@ extends Node2D
 
 var peca_cena = preload("res://peca.tscn")
 var peca_arrastavel_cena = preload("res://peca_arrastavel.tscn")
-var profundidade_maxima = 4
+var profundidade_maxima = 3
 var tabuleiro_jogo: Tabuleiro
 var aguardar_jogada_IA = false
 var thread: Thread = Thread.new()
@@ -73,7 +73,7 @@ func reiniciar_jogo(tipo_jogador_amarelo, tipo_jogador_vermelho) -> void:
 	for i in range(21):
 		var peca_arrastavel = peca_arrastavel_cena.instantiate()
 		peca_arrastavel.cor_jogador = Jogador.Cor.Vermelho
-		peca_arrastavel.global_position = Vector2(randi_range(900, 1125), 475 + i * 5)
+		peca_arrastavel.global_position = Vector2(randi_range(925, 1125), 475 + i * 5)
 		peca_arrastavel.mudar_textura_jogador(peca_vermelha_mesa)
 		peca_arrastavel.jogada_na_coluna.connect(jogar_na_posicao_arrastando)
 		
