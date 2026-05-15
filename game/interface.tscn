@@ -2,8 +2,31 @@
 
 [ext_resource type="ButtonGroup" uid="uid://c8a2vhsjst2s" path="res://botoes_opcoes_jogo.tres" id="1_rh14k"]
 [ext_resource type="Texture2D" uid="uid://xcga42mkni53" path="res://Assets/fundo_mesa.png" id="2_kyn48"]
-[ext_resource type="Texture2D" uid="uid://dbm1aangt3up3" path="res://Assets/computador.png" id="3_4rbkc"]
-[ext_resource type="Texture2D" uid="uid://bxi3gfcrrmj57" path="res://Assets/tabuleiro.png" id="4_pt1ru"]
+[ext_resource type="Texture2D" uid="uid://dox30veslcgv5" path="res://Assets/mesa.png" id="2_xqc7l"]
+[ext_resource type="Texture2D" uid="uid://dlesyrat6i36q" path="res://Assets/Computador.png" id="3_4rbkc"]
+[ext_resource type="Texture2D" uid="uid://bwcjc34e1ts3q" path="res://Assets/Botões Modalidades/Botão1.png" id="4_wjb41"]
+[ext_resource type="Texture2D" uid="uid://cq4baxdpvhw6p" path="res://Assets/Botões Modalidades/Botão1_Pressionado.png" id="5_2m66s"]
+[ext_resource type="Texture2D" uid="uid://dcf0n7373d3qx" path="res://Assets/Botões Modalidades/Botão2.png" id="6_x8lwq"]
+[ext_resource type="Script" uid="uid://csdbpgp53obys" path="res://botao_jogadorvs_jogador.gd" id="7_ageka"]
+[ext_resource type="Texture2D" uid="uid://b8pij4sytbk5j" path="res://Assets/Botões Modalidades/Botão2_Pressionado.png" id="7_yg014"]
+[ext_resource type="Texture2D" uid="uid://dgn6lws12mf1v" path="res://Assets/Botões Modalidades/Botão4.png" id="8_bmdto"]
+[ext_resource type="Texture2D" uid="uid://c4dphsu61s4dm" path="res://Assets/Botões Modalidades/Botão4_pressionado.png" id="9_chom7"]
+[ext_resource type="Texture2D" uid="uid://ddx8agh0ec3m5" path="res://Assets/Botões Modalidades/Botão3.png" id="10_gxukf"]
+[ext_resource type="Script" uid="uid://c62his8bwoyne" path="res://botao_jogadorvs_ai.gd" id="11_xmuci"]
+[ext_resource type="Texture2D" uid="uid://rd0lhr08ad7f" path="res://Assets/Botões Modalidades/Botão3_pressionado.png" id="11_xqc7l"]
+[ext_resource type="Texture2D" uid="uid://bru7kwj7jo1b6" path="res://Assets/Botões Modalidades/Botao_facil.png" id="12_bmdto"]
+[ext_resource type="Script" uid="uid://c8bqom7kje4gf" path="res://botao_dificuldade.gd" id="13_chom7"]
+[ext_resource type="Texture2D" uid="uid://buyydxl7kijqv" path="res://Assets/Botões Modalidades/Botao_medio.png" id="14_gxukf"]
+[ext_resource type="Script" uid="uid://cupwtj0y2u7at" path="res://botao_a_ivs_ai.gd" id="14_rv35a"]
+[ext_resource type="AudioStream" uid="uid://dw5xxtn15poej" path="res://SFX/pressionar_botao.wav" id="14_xmuci"]
+[ext_resource type="Texture2D" uid="uid://x0ankf0hn3qh" path="res://Assets/Botões Modalidades/Botao_Dificil.png" id="15_xqc7l"]
+[ext_resource type="Texture2D" uid="uid://byxyc8tdp5fyw" path="res://Assets/Teste stickynote.png" id="16_gxukf"]
+[ext_resource type="Texture2D" uid="uid://bot5gv304ymjp" path="res://Assets/Teste stickynote2.png" id="17_gr0b1"]
+[ext_resource type="Script" uid="uid://dib2hd6wfrnxn" path="res://botao_a_ivs_jogador.gd" id="17_k6srb"]
+[ext_resource type="Script" uid="uid://dbuiwna24mgbc" path="res://sticky_note.gd" id="17_xqc7l"]
+[ext_resource type="Texture2D" uid="uid://c00pwxcw32ljv" path="res://Assets/Teste stickynote3.png" id="19_4xt2l"]
+
+[sub_resource type="ButtonGroup" id="ButtonGroup_2m66s"]
 
 [node name="Interface" type="Control" unique_id=609387248]
 z_index = 1
@@ -53,8 +76,8 @@ layout_mode = 2
 button_group = ExtResource("1_rh14k")
 text = "IA vs IA"
 
-[node name="TextureRect" type="TextureRect" parent="." unique_id=1608889225]
-z_index = -1
+[node name="Fundo" type="TextureRect" parent="." unique_id=1608889225]
+z_index = -4
 layout_mode = 1
 offset_right = 1152.0
 offset_bottom = 648.0
@@ -62,20 +85,167 @@ mouse_filter = 2
 texture = ExtResource("2_kyn48")
 expand_mode = 1
 
-[node name="TextureRect2" type="TextureRect" parent="." unique_id=28704615]
+[node name="Computador" type="TextureRect" parent="." unique_id=28704615]
 z_index = -1
 layout_mode = 1
-offset_right = 1152.0
-offset_bottom = 648.0
+offset_left = 46.22229
+offset_top = 20.0
+offset_right = 1116.4445
+offset_bottom = 622.0
 mouse_filter = 2
 texture = ExtResource("3_4rbkc")
 expand_mode = 1
+stretch_mode = 5
 
-[node name="TextureRect3" type="TextureRect" parent="." unique_id=387286906]
-z_index = -1
+[node name="Mesa" type="TextureRect" parent="." unique_id=1380741495]
+z_index = -2
 layout_mode = 0
-offset_right = 1152.0
-offset_bottom = 648.0
-mouse_filter = 2
-texture = ExtResource("4_pt1ru")
-expand_mode = 1
+offset_top = 430.0
+offset_right = 3840.0
+offset_bottom = 1156.0
+scale = Vector2(0.3, 0.3)
+texture = ExtResource("2_xqc7l")
+
+[node name="Control" type="Control" parent="." unique_id=1942797137]
+z_index = 1
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="BotaoJogadorvsJogador" type="TextureButton" parent="Control" unique_id=381144]
+layout_mode = 0
+offset_left = 559.00006
+offset_top = 437.0
+offset_right = 827.00006
+offset_bottom = 608.0
+scale = Vector2(0.31, 0.31)
+toggle_mode = true
+button_group = SubResource("ButtonGroup_2m66s")
+texture_normal = ExtResource("4_wjb41")
+texture_pressed = ExtResource("5_2m66s")
+script = ExtResource("7_ageka")
+
+[node name="SomBotaoModo" type="AudioStreamPlayer" parent="Control/BotaoJogadorvsJogador" unique_id=1993720659]
+stream = ExtResource("14_xmuci")
+
+[node name="BotaoJogadorvsAI" type="TextureButton" parent="Control" unique_id=1389896147]
+layout_mode = 0
+offset_left = 638.0
+offset_top = 437.0
+offset_right = 891.0
+offset_bottom = 602.0
+scale = Vector2(0.31, 0.31)
+toggle_mode = true
+button_group = SubResource("ButtonGroup_2m66s")
+texture_normal = ExtResource("6_x8lwq")
+texture_pressed = ExtResource("7_yg014")
+script = ExtResource("11_xmuci")
+
+[node name="SomBotaoModo" type="AudioStreamPlayer" parent="Control/BotaoJogadorvsAI" unique_id=133191465]
+stream = ExtResource("14_xmuci")
+
+[node name="BotaoAIvsAI" type="TextureButton" parent="Control" unique_id=740104127]
+layout_mode = 0
+offset_left = 789.0
+offset_top = 436.0
+offset_right = 1060.0
+offset_bottom = 608.0
+scale = Vector2(0.31, 0.31)
+toggle_mode = true
+button_group = SubResource("ButtonGroup_2m66s")
+texture_normal = ExtResource("8_bmdto")
+texture_pressed = ExtResource("9_chom7")
+script = ExtResource("14_rv35a")
+
+[node name="SomBotaoModo" type="AudioStreamPlayer" parent="Control/BotaoAIvsAI" unique_id=794914080]
+stream = ExtResource("14_xmuci")
+
+[node name="BotaoAIvsJogador" type="TextureButton" parent="Control" unique_id=96910530]
+layout_mode = 0
+offset_left = 716.0
+offset_top = 437.0
+offset_right = 966.0
+offset_bottom = 602.0
+scale = Vector2(0.31, 0.31)
+toggle_mode = true
+button_group = SubResource("ButtonGroup_2m66s")
+texture_normal = ExtResource("10_gxukf")
+texture_pressed = ExtResource("11_xqc7l")
+script = ExtResource("17_k6srb")
+
+[node name="SomBotaoModo" type="AudioStreamPlayer" parent="Control/BotaoAIvsJogador" unique_id=1732001400]
+stream = ExtResource("14_xmuci")
+
+[node name="BotaoDificuldade" type="TextureButton" parent="." unique_id=756160451]
+layout_mode = 0
+offset_left = 393.99997
+offset_top = 445.99997
+offset_right = 965.0
+offset_bottom = 744.0
+scale = Vector2(0.29, 0.29)
+texture_normal = ExtResource("12_bmdto")
+script = ExtResource("13_chom7")
+textures = Array[Texture2D]([ExtResource("12_bmdto"), ExtResource("14_gxukf"), ExtResource("15_xqc7l")])
+
+[node name="StickyNote" type="TextureButton" parent="." unique_id=906057096]
+z_index = -3
+layout_mode = 0
+offset_left = 81.0
+offset_top = 238.0
+offset_right = 506.0
+offset_bottom = 708.0
+rotation = -0.13264503
+scale = Vector2(0.18, 0.18)
+texture_normal = ExtResource("16_gxukf")
+script = ExtResource("17_xqc7l")
+
+[node name="StickyNote3" type="TextureButton" parent="." unique_id=1509890896]
+z_index = -3
+layout_mode = 0
+offset_left = 97.99999
+offset_top = 152.0
+offset_right = 523.0
+offset_bottom = 622.0
+rotation = 0.13264503
+scale = Vector2(0.18, 0.18)
+texture_normal = ExtResource("19_4xt2l")
+script = ExtResource("17_xqc7l")
+
+[node name="StickyNote4" type="TextureButton" parent="." unique_id=321735564]
+z_index = -3
+layout_mode = 0
+offset_left = -21.0
+offset_top = 196.0
+offset_right = 404.0
+offset_bottom = 666.0
+rotation = -0.13264503
+scale = Vector2(0.18, 0.18)
+texture_normal = ExtResource("19_4xt2l")
+script = ExtResource("17_xqc7l")
+
+[node name="StickyNote5" type="TextureButton" parent="." unique_id=741418219]
+z_index = -3
+layout_mode = 0
+offset_left = 151.0
+offset_top = 260.0
+offset_right = 576.0
+offset_bottom = 730.0
+rotation = -0.52883476
+scale = Vector2(0.18, 0.18)
+texture_normal = ExtResource("19_4xt2l")
+script = ExtResource("17_xqc7l")
+
+[node name="StickyNote2" type="TextureButton" parent="." unique_id=2032349549]
+z_index = -3
+layout_mode = 0
+offset_left = 1008.0
+offset_top = 152.0
+offset_right = 1433.0
+offset_bottom = 622.0
+rotation = -0.13264503
+scale = Vector2(0.25, 0.25)
+texture_normal = ExtResource("16_gxukf")
+texture_pressed = ExtResource("17_gr0b1")

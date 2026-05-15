@@ -5,6 +5,7 @@
 [ext_resource type="Texture2D" uid="uid://bq3kxxwey0svu" path="res://Assets/peca_amarela_invertida.png" id="4_pg35c"]
 [ext_resource type="Texture2D" uid="uid://ct65h4ly2870j" path="res://Assets/peca_vermelha.png" id="5_ub8d2"]
 [ext_resource type="Texture2D" uid="uid://nekxvrgu8fmv" path="res://Assets/peca_vermelha_invertida.png" id="6_2etiq"]
+[ext_resource type="AudioStream" uid="uid://13kir80xcavn" path="res://SFX/peca_caindo.wav" id="6_n8aky"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_wicik"]
 animations = [{
@@ -44,3 +45,7 @@ scale = Vector2(0.5, 0.5)
 sprite_frames = SubResource("SpriteFrames_wicik")
 animation = &"vitoria_amarelo"
 frame_progress = 0.63879055
+
+[node name="Peca_caindo" type="AudioStreamPlayer" parent="." unique_id=736120921]
+stream = ExtResource("6_n8aky")
+pitch_scale = 1.5
