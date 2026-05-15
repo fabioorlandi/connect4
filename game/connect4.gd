@@ -17,16 +17,20 @@ var peca_cena = preload("res://peca.tscn")
 var peca_arrastavel_cena = preload("res://peca_arrastavel.tscn")
 var profundidade_maxima = 4
 var tabuleiro_jogo: Tabuleiro
+var aguardar_jogada_IA = false
 var thread: Thread = Thread.new()
+var mutex: Mutex = Mutex.new()
+var semaphore: Semaphore = Semaphore.new()
 var ia: Minimax = Minimax.new()
 
 func _ready():
 	reiniciar_jogo(Jogador.TipoJogador.Humano, Jogador.TipoJogador.Humano)
+
 	for opcao_jogo in opcoes_jogo:
 		opcao_jogo.connect("pressed", _on_opcoes_jogo_pressed.bind(opcao_jogo.name))
 
-func _on_opcoes_jogo_pressed(name: String) -> void:
-	match name:
+func _on_opcoes_jogo_pressed(nome_opcao: String) -> void:
+	match nome_opcao:
 		"JogadorContraJogador":
 			print("Jogador vs Jogador")
 			reiniciar_jogo(Jogador.TipoJogador.Humano, Jogador.TipoJogador.Humano)
@@ -36,20 +40,21 @@ func _on_opcoes_jogo_pressed(name: String) -> void:
 		"IAContraJogador":
 			print("IA vs Jogador")
 			reiniciar_jogo(Jogador.TipoJogador.Computador, Jogador.TipoJogador.Humano)
-			await jogar_na_posicao_IA()
 		"IAContraIA":
 			print("IA vs IA")
 			reiniciar_jogo(Jogador.TipoJogador.Computador, Jogador.TipoJogador.Computador)
-			await jogar_na_posicao_IA()
 
 func reiniciar_jogo(tipo_jogador_amarelo, tipo_jogador_vermelho) -> void:
 	desabilitar_colunas()
 
-	tabuleiro_jogo = Tabuleiro.new()
-	tabuleiro_jogo.jogador_amarelo.tipo_jogador = tipo_jogador_amarelo
-	tabuleiro_jogo.jogador_vermelho.tipo_jogador = tipo_jogador_vermelho
-	info_jogo.text = "Próximo a jogar: " + Jogador.Cor.keys()[tabuleiro_jogo.jogador_atual.cor]
-	
+	for opcao_jogo in opcoes_jogo:
+		opcao_jogo.disabled = true
+		
+	Global2D.cancelar_IA = true
+	if thread.is_started():
+		semaphore.post()
+		thread.wait_to_finish()
+
 	for peca_arrastavel in pecas_arrastaveis.get_children():
 		peca_arrastavel.queue_free()
 	for peca in pecas.get_children():
@@ -73,6 +78,21 @@ func reiniciar_jogo(tipo_jogador_amarelo, tipo_jogador_vermelho) -> void:
 		
 		pecas_arrastaveis.add_child(peca_arrastavel)
 	
+	tabuleiro_jogo = Tabuleiro.new()
+	tabuleiro_jogo.jogador_amarelo.tipo_jogador = tipo_jogador_amarelo
+	tabuleiro_jogo.jogador_vermelho.tipo_jogador = tipo_jogador_vermelho
+	info_jogo.text = "Próximo a jogar: " + Jogador.Cor.keys()[tabuleiro_jogo.jogador_atual.cor]
+
+	Global2D.cancelar_IA = false
+	aguardar_jogada_IA = false
+	thread.start(iniciar_jogada_IA)
+	
+	if tabuleiro_jogo.jogador_atual.tipo_jogador == Jogador.TipoJogador.Computador:
+		semaphore.post()
+
+	for opcao_jogo in opcoes_jogo:
+		opcao_jogo.disabled = false
+
 	habilitar_colunas()
 
 func desabilitar_colunas():
@@ -130,19 +150,30 @@ func mostrar_tabuleiro_CLI() -> void:
 		print(linha_str)
 	print("-------------\n")
 
-func jogar_na_posicao_IA():
-	desabilitar_colunas()
-	thread.start(iniciar_jogada_IA)
-
 func iniciar_jogada_IA():
-	var jogador = tabuleiro_jogo.jogador_atual
-	var jogada = ia.jogar(tabuleiro_jogo.duplicate(true), jogador, profundidade_maxima)
-	call_deferred("finalizar_jogada_IA", jogada)
+	while true:
+		semaphore.wait()
+		if Global2D.cancelar_IA:
+			break
+
+		if not tabuleiro_jogo.estado_terminal() and tabuleiro_jogo.jogador_atual.tipo_jogador == Jogador.TipoJogador.Computador:
+			mutex.lock()
+			aguardar_jogada_IA = true
+			mutex.unlock()
+
+			var jogador = tabuleiro_jogo.jogador_atual
+			var jogada = ia.jogar(tabuleiro_jogo.duplicate(true), jogador, profundidade_maxima)
+
+			if not Global2D.cancelar_IA:
+				call_deferred("finalizar_jogada_IA", jogada)
 
 func finalizar_jogada_IA(jogada: Jogada):
-	thread.wait_to_finish()
+	desabilitar_colunas()
+
 	var linha = jogada.movimento[0]
 	var coluna = jogada.movimento[1]
+	
+	aguardar_jogada_IA = false
 	await jogar_na_posicao(coluna, linha)
 
 func jogar_na_posicao_arrastando(cor_jogador, coluna):
@@ -154,15 +185,19 @@ func jogar_na_posicao_arrastando(cor_jogador, coluna):
 		await jogar_na_posicao(coluna)
 
 func jogar_na_posicao(coluna, linha = null):
+	if Global2D.cancelar_IA:
+		return
+
 	desabilitar_colunas()
 	
-	if not tabuleiro_jogo.estado_terminal():
+	if not tabuleiro_jogo.estado_terminal() and not aguardar_jogada_IA:
 		var jogador = tabuleiro_jogo.jogador_atual
 		print("Vez do jogador: ", Jogador.Cor.keys()[jogador.cor])
 		
 		var espaco_disponivel = pegar_espaco_disponivel(coluna, linha)
 		if espaco_disponivel == null:
 			print("Coluna cheia!")
+			aguardar_jogada_IA = false
 			habilitar_colunas()
 			return
 		
@@ -196,8 +231,8 @@ func jogar_na_posicao(coluna, linha = null):
 			habilitar_colunas()
 	
 			mostrar_tabuleiro_CLI()
-			if tabuleiro_jogo.proximo_a_jogar().tipo_jogador == Jogador.TipoJogador.Computador:
-				await jogar_na_posicao_IA()
+			if tabuleiro_jogo.proximo_a_jogar().tipo_jogador == Jogador.TipoJogador.Computador and not aguardar_jogada_IA:
+				semaphore.post()
 
 func pegar_espaco_disponivel(coluna, linha = null):
 	var espaco_disponivel = null
@@ -218,14 +253,14 @@ func pegar_espaco_disponivel(coluna, linha = null):
 
 func marcar_vitoria() -> void:
 	var animacao_vitoria = animacao_vitoria_amarelo if tabuleiro_jogo.jogador_vitoria.cor == Jogador.Cor.Amarelo else animacao_vitoria_vermelho
-	var espacos = espacos.get_children()
+	var espacos_jogo = espacos.get_children()
 	
 	var vitorias_multiplas = {}
 	for espaco_vitoria in tabuleiro_jogo.espacos_com_vitoria:
 		if vitorias_multiplas.has(espaco_vitoria):
 			continue
 		
-		var espaco = espacos.filter(func(esp): return esp.linha == espaco_vitoria[0] and esp.coluna == espaco_vitoria[1])[0]
+		var espaco = espacos_jogo.filter(func(esp): return esp.linha == espaco_vitoria[0] and esp.coluna == espaco_vitoria[1])[0]
 		
 		var peca = peca_cena.instantiate()
 		pecas.add_child(peca)
