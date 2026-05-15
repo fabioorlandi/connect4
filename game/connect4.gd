@@ -10,12 +10,13 @@ extends Node2D
 @onready var espacos = $Tabuleiro/Espacos
 @onready var pecas = $Pecas
 @onready var opcoes_jogo = $Interface/OpcoesJogo.get_children()
-@onready var info_jogo = $Interface/CenterContainer/InfoJogo
+@onready var botao_dificuldade = $Interface/BotaoDificuldade
+@onready var info_jogo = $Interface/InfoJogo
 @onready var pecas_arrastaveis = $PecasArrastaveis
 
 var peca_cena = preload("res://peca.tscn")
 var peca_arrastavel_cena = preload("res://peca_arrastavel.tscn")
-var profundidade_maxima = 3
+var profundidade_maxima: int
 var tabuleiro_jogo: Tabuleiro
 var aguardar_jogada_IA = false
 var thread: Thread = Thread.new()
@@ -23,30 +24,55 @@ var mutex: Mutex = Mutex.new()
 var semaphore: Semaphore = Semaphore.new()
 var ia: Minimax = Minimax.new()
 
+var tipo_jogador_amarelo_atual: Jogador.TipoJogador
+var tipo_jogador_vermelho_atual: Jogador.TipoJogador
+
 func _ready():
+	profundidade_maxima = 2
 	reiniciar_jogo(Jogador.TipoJogador.Humano, Jogador.TipoJogador.Humano)
 
+	botao_dificuldade.connect("pressed", _on_dificuldade_pressed)
 	for opcao_jogo in opcoes_jogo:
 		opcao_jogo.connect("pressed", _on_opcoes_jogo_pressed.bind(opcao_jogo.name))
+
+func _on_dificuldade_pressed() -> void:
+	match botao_dificuldade.dificuldade:
+		Dificuldade.SeletorDificuldade.Facil:
+			profundidade_maxima = 2
+		Dificuldade.SeletorDificuldade.Medio:
+			profundidade_maxima = 3
+		Dificuldade.SeletorDificuldade.Dificil:
+			profundidade_maxima = 4
+			
+	reiniciar_jogo(tipo_jogador_amarelo_atual, tipo_jogador_vermelho_atual)
 
 func _on_opcoes_jogo_pressed(nome_opcao: String) -> void:
 	match nome_opcao:
 		"JogadorContraJogador":
 			print("Jogador vs Jogador")
-			reiniciar_jogo(Jogador.TipoJogador.Humano, Jogador.TipoJogador.Humano)
+			tipo_jogador_amarelo_atual = Jogador.TipoJogador.Humano
+			tipo_jogador_vermelho_atual = Jogador.TipoJogador.Humano
+			reiniciar_jogo(tipo_jogador_amarelo_atual, tipo_jogador_vermelho_atual)
 		"JogadorContraIA":
 			print("Jogador vs IA")
-			reiniciar_jogo(Jogador.TipoJogador.Humano, Jogador.TipoJogador.Computador)
+			tipo_jogador_amarelo_atual = Jogador.TipoJogador.Humano
+			tipo_jogador_vermelho_atual = Jogador.TipoJogador.Computador
+			reiniciar_jogo(tipo_jogador_amarelo_atual, tipo_jogador_vermelho_atual)
 		"IAContraJogador":
 			print("IA vs Jogador")
-			reiniciar_jogo(Jogador.TipoJogador.Computador, Jogador.TipoJogador.Humano)
+			tipo_jogador_amarelo_atual = Jogador.TipoJogador.Computador
+			tipo_jogador_vermelho_atual = Jogador.TipoJogador.Humano
+			reiniciar_jogo(tipo_jogador_amarelo_atual, tipo_jogador_vermelho_atual)
 		"IAContraIA":
 			print("IA vs IA")
-			reiniciar_jogo(Jogador.TipoJogador.Computador, Jogador.TipoJogador.Computador)
+			tipo_jogador_amarelo_atual = Jogador.TipoJogador.Computador
+			tipo_jogador_vermelho_atual = Jogador.TipoJogador.Computador
+			reiniciar_jogo(tipo_jogador_amarelo_atual, tipo_jogador_vermelho_atual)
 
 func reiniciar_jogo(tipo_jogador_amarelo, tipo_jogador_vermelho) -> void:
 	desabilitar_colunas()
 
+	botao_dificuldade.disabled = true
 	for opcao_jogo in opcoes_jogo:
 		opcao_jogo.disabled = true
 		
@@ -82,7 +108,7 @@ func reiniciar_jogo(tipo_jogador_amarelo, tipo_jogador_vermelho) -> void:
 	tabuleiro_jogo = Tabuleiro.new()
 	tabuleiro_jogo.jogador_amarelo.tipo_jogador = tipo_jogador_amarelo
 	tabuleiro_jogo.jogador_vermelho.tipo_jogador = tipo_jogador_vermelho
-	info_jogo.text = "Próximo a jogar: " + Jogador.Cor.keys()[tabuleiro_jogo.jogador_atual.cor]
+	info_jogo.text = "Jogador: " + Jogador.Cor.keys()[tabuleiro_jogo.jogador_atual.cor]
 
 	Global2D.cancelar_IA = false
 	aguardar_jogada_IA = false
@@ -91,6 +117,7 @@ func reiniciar_jogo(tipo_jogador_amarelo, tipo_jogador_vermelho) -> void:
 	if tabuleiro_jogo.jogador_atual.tipo_jogador == Jogador.TipoJogador.Computador:
 		semaphore.post()
 
+	botao_dificuldade.disabled = false
 	for opcao_jogo in opcoes_jogo:
 		opcao_jogo.disabled = false
 
@@ -210,7 +237,7 @@ func jogar_na_posicao(coluna, linha = null, limpar_peca_arrastavel = true):
 		peca.mudar_textura_jogador(cor_peca)
 		pecas.add_child(peca)
 	
-		peca.global_position = Vector2(espaco_disponivel.global_position.x, 50)
+		peca.global_position = Vector2(espaco_disponivel.global_position.x, 75)
 		espaco_disponivel.ocupado = true
 		await peca.jogar_peca(espaco_disponivel.global_position)
 		
@@ -223,7 +250,7 @@ func jogar_na_posicao(coluna, linha = null, limpar_peca_arrastavel = true):
 		print("Jogada na posição: [", espaco_disponivel.linha, ", ", espaco_disponivel.coluna, "]")
 		
 		if tabuleiro_jogo.verificar_vitoria(jogador):
-			info_jogo.text = "Jogador " + Jogador.Cor.keys()[tabuleiro_jogo.jogador_vitoria.cor] + " venceu!"
+			info_jogo.text = Jogador.Cor.keys()[tabuleiro_jogo.jogador_vitoria.cor] + " venceu!"
 			print("Jogador ", Jogador.Cor.keys()[jogador.cor], " venceu!")
 			
 			marcar_vitoria()
@@ -236,7 +263,7 @@ func jogar_na_posicao(coluna, linha = null, limpar_peca_arrastavel = true):
 			mostrar_tabuleiro_CLI()
 		else:
 			var proximo_a_jogar = tabuleiro_jogo.proximo_a_jogar()
-			info_jogo.text = "Próximo a jogar: " + Jogador.Cor.keys()[proximo_a_jogar.cor]
+			info_jogo.text = "Jogador: " + Jogador.Cor.keys()[proximo_a_jogar.cor]
 			habilitar_colunas()
 	
 			mostrar_tabuleiro_CLI()
@@ -278,7 +305,7 @@ func marcar_vitoria() -> void:
 		var peca = peca_cena.instantiate()
 		pecas.add_child(peca)
 		peca.iniciar_animacao_vitoria(animacao_vitoria)
-		peca.global_position = Vector2(espaco.global_position.x, 50)
+		peca.global_position = Vector2(espaco.global_position.x, 75)
 
 		await peca.jogar_peca(espaco.global_position)
 		

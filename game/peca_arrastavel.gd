@@ -19,7 +19,7 @@ func _process(delta):
 		
 	if mouse_over and Input.is_action_just_pressed("click") and not Global2D.is_dragging:
 		self.mudar_textura_jogador(cor_peca)
-		self.scale = Vector2(0.5, 0.5)
+		self.scale = Vector2(0.4, 0.4)
 		self.z_index = 7
 		
 		posicao_inicial = global_position
@@ -43,12 +43,12 @@ func _process(delta):
 func _on_mouse_entered():
 	if not Global2D.is_dragging:
 		mouse_over = true
-		scale = Vector2(0.65, 0.65)
+		scale = Vector2(0.55, 0.55)
 
 func _on_mouse_exited():
 	if not dragging:
 		mouse_over = false
-		scale = Vector2(0.5, 0.5)
+		scale = Vector2(0.4, 0.4)
 
 func _on_area_entered(area):
 	if area.is_in_group("AreaColunas"):
