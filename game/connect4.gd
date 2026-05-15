@@ -168,6 +168,8 @@ func iniciar_jogada_IA():
 				call_deferred("finalizar_jogada_IA", jogada)
 
 func finalizar_jogada_IA(jogada: Jogada):
+	desabilitar_colunas()
+
 	var linha = jogada.movimento[0]
 	var coluna = jogada.movimento[1]
 	
@@ -183,9 +185,6 @@ func jogar_na_posicao_arrastando(cor_jogador, coluna):
 		await jogar_na_posicao(coluna)
 
 func jogar_na_posicao(coluna, linha = null):
-	if Global2D.cancelar_IA:
-		return
-
 	desabilitar_colunas()
 	
 	if not tabuleiro_jogo.estado_terminal() and not aguardar_jogada_IA:
