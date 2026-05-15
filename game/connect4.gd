@@ -51,6 +51,7 @@ func reiniciar_jogo(tipo_jogador_amarelo, tipo_jogador_vermelho) -> void:
 		opcao_jogo.disabled = true
 		
 	Global2D.cancelar_IA = true
+	aguardar_jogada_IA = true
 	if thread.is_started():
 		semaphore.post()
 		thread.wait_to_finish()
