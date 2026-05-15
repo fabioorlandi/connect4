@@ -150,9 +150,6 @@ func mostrar_tabuleiro_CLI() -> void:
 		print(linha_str)
 	print("-------------\n")
 
-func jogar_na_posicao_IA():
-	desabilitar_colunas()
-
 func iniciar_jogada_IA():
 	while true:
 		semaphore.wait()
