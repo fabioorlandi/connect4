@@ -61,7 +61,7 @@ func reiniciar_jogo(tipo_jogador_amarelo, tipo_jogador_vermelho) -> void:
 		peca.queue_free()
 	for espaco in espacos.get_children():
 		espaco.ocupado = false
-	for i in range(20):
+	for i in range(21):
 		var peca_arrastavel = peca_arrastavel_cena.instantiate()
 		peca_arrastavel.cor_jogador = Jogador.Cor.Amarelo
 		peca_arrastavel.global_position = Vector2(randi_range(25, 225), 475 + i * 5)
@@ -69,7 +69,7 @@ func reiniciar_jogo(tipo_jogador_amarelo, tipo_jogador_vermelho) -> void:
 		peca_arrastavel.jogada_na_coluna.connect(jogar_na_posicao_arrastando)
 		
 		pecas_arrastaveis.add_child(peca_arrastavel)
-	for i in range(20):
+	for i in range(21):
 		var peca_arrastavel = peca_arrastavel_cena.instantiate()
 		peca_arrastavel.cor_jogador = Jogador.Cor.Vermelho
 		peca_arrastavel.global_position = Vector2(randi_range(900, 1125), 475 + i * 5)
@@ -156,7 +156,8 @@ func iniciar_jogada_IA():
 		if Global2D.cancelar_IA:
 			break
 
-		if not tabuleiro_jogo.estado_terminal() and tabuleiro_jogo.jogador_atual.tipo_jogador == Jogador.TipoJogador.Computador:
+		if not tabuleiro_jogo.estado_terminal()\
+			and tabuleiro_jogo.jogador_atual.tipo_jogador == Jogador.TipoJogador.Computador:
 			mutex.lock()
 			aguardar_jogada_IA = true
 			mutex.unlock()
@@ -173,21 +174,23 @@ func finalizar_jogada_IA(jogada: Jogada):
 	var linha = jogada.movimento[0]
 	var coluna = jogada.movimento[1]
 	
+	if Global2D.cancelar_IA:
+		return
+		
 	aguardar_jogada_IA = false
 	await jogar_na_posicao(coluna, linha)
 
-func jogar_na_posicao_arrastando(cor_jogador, coluna):
-	if not cor_jogador == tabuleiro_jogo.jogador_atual.cor:
+func jogar_na_posicao_arrastando(peca_arrastavel, coluna):
+	if not peca_arrastavel.cor_jogador == tabuleiro_jogo.jogador_atual.cor:
 		print("Peça inválida!")
 		return
-	else:
-		#peca.queue_free()
-		await jogar_na_posicao(coluna)
-
-func jogar_na_posicao(coluna, linha = null):
-	if Global2D.cancelar_IA:
+	elif aguardar_jogada_IA:
 		return
+	else:
+		peca_arrastavel.queue_free()
+		await jogar_na_posicao(coluna, null, false)
 
+func jogar_na_posicao(coluna, linha = null, limpar_peca_arrastavel = true):
 	desabilitar_colunas()
 	
 	if not tabuleiro_jogo.estado_terminal() and not aguardar_jogada_IA:
@@ -209,6 +212,11 @@ func jogar_na_posicao(coluna, linha = null):
 		peca.global_position = Vector2(espaco_disponivel.global_position.x, 50)
 		espaco_disponivel.ocupado = true
 		await peca.jogar_peca(espaco_disponivel.global_position)
+		
+		if limpar_peca_arrastavel:
+			var arrastaveis = pecas_arrastaveis.get_children()
+			arrastaveis.shuffle()
+			arrastaveis.filter(func (arrastavel): return arrastavel.cor_jogador == jogador.cor)[0].queue_free()
 
 		tabuleiro_jogo.computar_jogada(espaco_disponivel.linha, espaco_disponivel.coluna)
 		print("Jogada na posição: [", espaco_disponivel.linha, ", ", espaco_disponivel.coluna, "]")
@@ -231,7 +239,8 @@ func jogar_na_posicao(coluna, linha = null):
 			habilitar_colunas()
 	
 			mostrar_tabuleiro_CLI()
-			if tabuleiro_jogo.proximo_a_jogar().tipo_jogador == Jogador.TipoJogador.Computador and not aguardar_jogada_IA:
+			if tabuleiro_jogo.proximo_a_jogar().tipo_jogador == Jogador.TipoJogador.Computador\
+				and not aguardar_jogada_IA:
 				semaphore.post()
 
 func pegar_espaco_disponivel(coluna, linha = null):
@@ -240,7 +249,8 @@ func pegar_espaco_disponivel(coluna, linha = null):
 	espacos_jogaveis.reverse()
 	
 	if not linha == null:
-		var espaco = espacos_jogaveis.filter(func(jogavel): return jogavel.coluna == coluna and jogavel.linha == linha)
+		var espaco = espacos_jogaveis.filter(func(jogavel):\
+			return jogavel.coluna == coluna and jogavel.linha == linha)
 		if not espaco == null:
 			espaco_disponivel = espaco[0]
 	else:
@@ -252,7 +262,8 @@ func pegar_espaco_disponivel(coluna, linha = null):
 	return espaco_disponivel
 
 func marcar_vitoria() -> void:
-	var animacao_vitoria = animacao_vitoria_amarelo if tabuleiro_jogo.jogador_vitoria.cor == Jogador.Cor.Amarelo else animacao_vitoria_vermelho
+	var animacao_vitoria = animacao_vitoria_amarelo\
+		if tabuleiro_jogo.jogador_vitoria.cor == Jogador.Cor.Amarelo else animacao_vitoria_vermelho
 	var espacos_jogo = espacos.get_children()
 	
 	var vitorias_multiplas = {}
@@ -260,7 +271,8 @@ func marcar_vitoria() -> void:
 		if vitorias_multiplas.has(espaco_vitoria):
 			continue
 		
-		var espaco = espacos_jogo.filter(func(esp): return esp.linha == espaco_vitoria[0] and esp.coluna == espaco_vitoria[1])[0]
+		var espaco = espacos_jogo.filter(func(esp):\
+			return esp.linha == espaco_vitoria[0] and esp.coluna == espaco_vitoria[1])[0]
 		
 		var peca = peca_cena.instantiate()
 		pecas.add_child(peca)

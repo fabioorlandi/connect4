@@ -1,6 +1,6 @@
 extends Area2D
 
-signal jogada_na_coluna(cor_jogador, indice_coluna)
+signal jogada_na_coluna(peca_arrastavel, indice_coluna)
 
 @onready var peca_vermelha = "res://Assets/peca_vermelha.png"
 @onready var peca_amarela = "res://Assets/peca_amarela.png"
@@ -36,10 +36,9 @@ func _process(delta):
 
 		if hovering_columns.size() > 0:
 			var coluna = hovering_columns[-1]
-			jogada_na_coluna.emit(cor_jogador, coluna.indice_coluna)
-			queue_free()
-		else:
-			global_position = posicao_inicial
+			jogada_na_coluna.emit(self, coluna.indice_coluna)
+
+		global_position = posicao_inicial
 
 func _on_mouse_entered():
 	if not Global2D.is_dragging:
