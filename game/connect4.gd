@@ -15,9 +15,8 @@ extends Node2D
 
 var peca_cena = preload("res://peca.tscn")
 var peca_arrastavel_cena = preload("res://peca_arrastavel.tscn")
-var profundidade_maxima = 5
+var profundidade_maxima = 4
 var tabuleiro_jogo: Tabuleiro
-var cancelar_thread = false
 var aguardar_jogada_IA = false
 var thread: Thread = Thread.new()
 var mutex: Mutex = Mutex.new()
@@ -51,7 +50,7 @@ func reiniciar_jogo(tipo_jogador_amarelo, tipo_jogador_vermelho) -> void:
 	for opcao_jogo in opcoes_jogo:
 		opcao_jogo.disabled = true
 		
-	cancelar_thread = true
+	Global2D.cancelar_IA = true
 	if thread.is_started():
 		semaphore.post()
 		thread.wait_to_finish()
@@ -84,7 +83,7 @@ func reiniciar_jogo(tipo_jogador_amarelo, tipo_jogador_vermelho) -> void:
 	tabuleiro_jogo.jogador_vermelho.tipo_jogador = tipo_jogador_vermelho
 	info_jogo.text = "Próximo a jogar: " + Jogador.Cor.keys()[tabuleiro_jogo.jogador_atual.cor]
 
-	cancelar_thread = false
+	Global2D.cancelar_IA = false
 	aguardar_jogada_IA = false
 	thread.start(iniciar_jogada_IA)
 	
@@ -157,11 +156,7 @@ func jogar_na_posicao_IA():
 func iniciar_jogada_IA():
 	while true:
 		semaphore.wait()
-		mutex.lock()
-		var cancelado = cancelar_thread
-		mutex.unlock()
-
-		if cancelado:
+		if Global2D.cancelar_IA:
 			break
 
 		if not tabuleiro_jogo.estado_terminal() and tabuleiro_jogo.jogador_atual.tipo_jogador == Jogador.TipoJogador.Computador:
@@ -171,12 +166,8 @@ func iniciar_jogada_IA():
 
 			var jogador = tabuleiro_jogo.jogador_atual
 			var jogada = ia.jogar(tabuleiro_jogo.duplicate(true), jogador, profundidade_maxima)
-		
-			mutex.lock()
-			cancelado = cancelar_thread
-			mutex.unlock()
-		
-			if not cancelado:
+
+			if not Global2D.cancelar_IA:
 				call_deferred("finalizar_jogada_IA", jogada)
 
 func finalizar_jogada_IA(jogada: Jogada):
@@ -195,7 +186,7 @@ func jogar_na_posicao_arrastando(cor_jogador, coluna):
 		await jogar_na_posicao(coluna)
 
 func jogar_na_posicao(coluna, linha = null):
-	if cancelar_thread:
+	if Global2D.cancelar_IA:
 		return
 
 	desabilitar_colunas()

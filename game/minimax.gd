@@ -6,6 +6,9 @@ func jogar(tabuleiro: Tabuleiro, jogador: Jogador, profMax: int) -> Jogada:
 	return jogada
 
 func minimax(tabuleiro: Tabuleiro, jogador: Jogador, profMax: int, prof: int) -> Jogada:
+	if Global2D.cancelar_IA:
+		return Jogada.new([], 0)
+	
 	if tabuleiro.estado_terminal() or tabuleiro.verificar_empate() or prof == profMax:
 		var avaliacao = tabuleiro.avaliar_estado(jogador)
 		return Jogada.new([], avaliacao)
