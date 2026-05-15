@@ -185,6 +185,9 @@ func jogar_na_posicao_arrastando(cor_jogador, coluna):
 		await jogar_na_posicao(coluna)
 
 func jogar_na_posicao(coluna, linha = null):
+	if Global2D.cancelar_IA:
+		return
+
 	desabilitar_colunas()
 	
 	if not tabuleiro_jogo.estado_terminal() and not aguardar_jogada_IA:
