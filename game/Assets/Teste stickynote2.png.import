@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dlesyrat6i36q"
-path="res://.godot/imported/Computador.png-bfd7ed0b13809208f2c43aae13a56330.ctex"
+uid="uid://bot5gv304ymjp"
+path="res://.godot/imported/Teste stickynote2.png-27009473298111f81ac7eca49acb8de1.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/Computador.png"
-dest_files=["res://.godot/imported/Computador.png-bfd7ed0b13809208f2c43aae13a56330.ctex"]
+source_file="res://Assets/Teste stickynote2.png"
+dest_files=["res://.godot/imported/Teste stickynote2.png-27009473298111f81ac7eca49acb8de1.ctex"]
 
 [params]
 

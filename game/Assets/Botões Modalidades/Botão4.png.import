@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bf7alphm5gyd7"
-path="res://.godot/imported/frente_espacos.png-527895e293e0eb8b0ae6f2c0d0540ac0.ctex"
+uid="uid://dgn6lws12mf1v"
+path="res://.godot/imported/Botão4.png-e8b8b7323e626ed6cb37152659a3dbf9.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/frente_espacos.png"
-dest_files=["res://.godot/imported/frente_espacos.png-527895e293e0eb8b0ae6f2c0d0540ac0.ctex"]
+source_file="res://Assets/Botões Modalidades/Botão4.png"
+dest_files=["res://.godot/imported/Botão4.png-e8b8b7323e626ed6cb37152659a3dbf9.ctex"]
 
 [params]
 

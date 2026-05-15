@@ -2,9 +2,10 @@
 
 [ext_resource type="PackedScene" uid="uid://bdivv7q405tvf" path="res://espaco.tscn" id="1_qqlt4"]
 [ext_resource type="PackedScene" uid="uid://bltk5fhfct35v" path="res://area_coluna.tscn" id="2_5hp0e"]
-[ext_resource type="Texture2D" uid="uid://cll8tdmheu4nw" path="res://Assets/frente_espacos_v2.png" id="3_f603q"]
+[ext_resource type="Texture2D" uid="uid://b35icbcbkvhv4" path="res://Assets/Tabuleiro.png" id="3_f603q"]
 
 [node name="Tabuleiro" type="Node2D" unique_id=2060084348]
+metadata/_edit_group_ = true
 
 [node name="Espacos" type="Node2D" parent="." unique_id=873254640]
 metadata/_edit_group_ = true
@@ -238,6 +239,6 @@ indice_coluna = 6
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=1528482116]
 z_index = 5
-position = Vector2(226.99995, 239.50002)
+position = Vector2(226.99995, 231.50002)
 scale = Vector2(0.4273128, 0.42888168)
 texture = ExtResource("3_f603q")
