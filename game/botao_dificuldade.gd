@@ -8,7 +8,6 @@ var estado := 0
 func _pressed():
 	estado = (estado + 1) % textures.size()
 	texture_normal = textures[estado]
-	print(estado)
 
 	if estado == 0:
 		dificuldade = Dificuldade.SeletorDificuldade.Facil
