@@ -3,25 +3,22 @@
 [ext_resource type="Texture2D" uid="uid://xcga42mkni53" path="res://Assets/fundo_mesa.png" id="2_kyn48"]
 [ext_resource type="Texture2D" uid="uid://dox30veslcgv5" path="res://Assets/mesa.png" id="2_xqc7l"]
 [ext_resource type="Texture2D" uid="uid://dlesyrat6i36q" path="res://Assets/computador.png" id="3_4rbkc"]
+[ext_resource type="Script" uid="uid://dcmmnlcxxd6i1" path="res://opcoes_jogo.gd" id="4_ageka"]
 [ext_resource type="Texture2D" uid="uid://bwcjc34e1ts3q" path="res://Assets/Botões Modalidades/Botão1.png" id="4_wjb41"]
 [ext_resource type="Texture2D" uid="uid://cq4baxdpvhw6p" path="res://Assets/Botões Modalidades/Botão1_Pressionado.png" id="5_2m66s"]
 [ext_resource type="Texture2D" uid="uid://dcf0n7373d3qx" path="res://Assets/Botões Modalidades/Botão2.png" id="6_x8lwq"]
-[ext_resource type="Script" uid="uid://csdbpgp53obys" path="res://botao_jogadorvs_jogador.gd" id="7_ageka"]
 [ext_resource type="Texture2D" uid="uid://b8pij4sytbk5j" path="res://Assets/Botões Modalidades/Botão2_Pressionado.png" id="7_yg014"]
 [ext_resource type="Texture2D" uid="uid://dgn6lws12mf1v" path="res://Assets/Botões Modalidades/Botão4.png" id="8_bmdto"]
 [ext_resource type="Texture2D" uid="uid://c4dphsu61s4dm" path="res://Assets/Botões Modalidades/Botão4_pressionado.png" id="9_chom7"]
 [ext_resource type="Texture2D" uid="uid://ddx8agh0ec3m5" path="res://Assets/Botões Modalidades/Botão3.png" id="10_gxukf"]
-[ext_resource type="Script" uid="uid://c62his8bwoyne" path="res://botao_jogadorvs_ai.gd" id="11_xmuci"]
 [ext_resource type="Texture2D" uid="uid://rd0lhr08ad7f" path="res://Assets/Botões Modalidades/Botão3_pressionado.png" id="11_xqc7l"]
 [ext_resource type="Texture2D" uid="uid://bru7kwj7jo1b6" path="res://Assets/Botões Modalidades/Botao_facil.png" id="12_bmdto"]
 [ext_resource type="Script" uid="uid://c8bqom7kje4gf" path="res://botao_dificuldade.gd" id="13_chom7"]
 [ext_resource type="Texture2D" uid="uid://buyydxl7kijqv" path="res://Assets/Botões Modalidades/Botao_medio.png" id="14_gxukf"]
-[ext_resource type="Script" uid="uid://cupwtj0y2u7at" path="res://botao_a_ivs_ai.gd" id="14_rv35a"]
 [ext_resource type="AudioStream" uid="uid://dw5xxtn15poej" path="res://SFX/pressionar_botao.wav" id="14_xmuci"]
 [ext_resource type="Texture2D" uid="uid://x0ankf0hn3qh" path="res://Assets/Botões Modalidades/Botao_Dificil.png" id="15_xqc7l"]
 [ext_resource type="Texture2D" uid="uid://byxyc8tdp5fyw" path="res://Assets/Teste stickynote.png" id="16_gxukf"]
 [ext_resource type="Texture2D" uid="uid://bot5gv304ymjp" path="res://Assets/Teste stickynote2.png" id="17_gr0b1"]
-[ext_resource type="Script" uid="uid://dib2hd6wfrnxn" path="res://botao_a_ivs_jogador.gd" id="17_k6srb"]
 [ext_resource type="Script" uid="uid://dbuiwna24mgbc" path="res://sticky_note.gd" id="17_xqc7l"]
 [ext_resource type="Texture2D" uid="uid://c00pwxcw32ljv" path="res://Assets/Teste stickynote3.png" id="19_4xt2l"]
 [ext_resource type="FontFile" uid="uid://cnhbk7rdyf35d" path="res://Assets/Fontes/8bitoperator_jve.ttf" id="25_rv35a"]
@@ -76,6 +73,10 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("4_ageka")
+
+[node name="SomBotaoModo" type="AudioStreamPlayer" parent="OpcoesJogo" unique_id=1993720659]
+stream = ExtResource("14_xmuci")
 
 [node name="JogadorContraJogador" type="TextureButton" parent="OpcoesJogo" unique_id=381144]
 layout_mode = 0
@@ -89,10 +90,6 @@ button_pressed = true
 button_group = SubResource("ButtonGroup_2m66s")
 texture_normal = ExtResource("4_wjb41")
 texture_pressed = ExtResource("5_2m66s")
-script = ExtResource("7_ageka")
-
-[node name="SomBotaoModo" type="AudioStreamPlayer" parent="OpcoesJogo/JogadorContraJogador" unique_id=1993720659]
-stream = ExtResource("14_xmuci")
 
 [node name="JogadorContraIA" type="TextureButton" parent="OpcoesJogo" unique_id=1389896147]
 layout_mode = 0
@@ -105,10 +102,6 @@ toggle_mode = true
 button_group = SubResource("ButtonGroup_2m66s")
 texture_normal = ExtResource("6_x8lwq")
 texture_pressed = ExtResource("7_yg014")
-script = ExtResource("11_xmuci")
-
-[node name="SomBotaoModo" type="AudioStreamPlayer" parent="OpcoesJogo/JogadorContraIA" unique_id=133191465]
-stream = ExtResource("14_xmuci")
 
 [node name="IAContraIA" type="TextureButton" parent="OpcoesJogo" unique_id=740104127]
 layout_mode = 0
@@ -121,10 +114,6 @@ toggle_mode = true
 button_group = SubResource("ButtonGroup_2m66s")
 texture_normal = ExtResource("8_bmdto")
 texture_pressed = ExtResource("9_chom7")
-script = ExtResource("14_rv35a")
-
-[node name="SomBotaoModo" type="AudioStreamPlayer" parent="OpcoesJogo/IAContraIA" unique_id=794914080]
-stream = ExtResource("14_xmuci")
 
 [node name="IAContraJogador" type="TextureButton" parent="OpcoesJogo" unique_id=96910530]
 layout_mode = 0
@@ -137,10 +126,6 @@ toggle_mode = true
 button_group = SubResource("ButtonGroup_2m66s")
 texture_normal = ExtResource("10_gxukf")
 texture_pressed = ExtResource("11_xqc7l")
-script = ExtResource("17_k6srb")
-
-[node name="SomBotaoModo" type="AudioStreamPlayer" parent="OpcoesJogo/IAContraJogador" unique_id=1732001400]
-stream = ExtResource("14_xmuci")
 
 [node name="BotaoDificuldade" type="TextureButton" parent="." unique_id=756160451]
 layout_mode = 0

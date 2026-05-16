@@ -9,7 +9,7 @@ extends Node2D
 @onready var colunas = $Tabuleiro/Colunas
 @onready var espacos = $Tabuleiro/Espacos
 @onready var pecas = $Pecas
-@onready var opcoes_jogo = $Interface/OpcoesJogo.get_children()
+@onready var opcoes_jogo = $Interface/OpcoesJogo
 @onready var botao_dificuldade = $Interface/BotaoDificuldade
 @onready var info_jogo = $Interface/InfoJogo
 @onready var pecas_arrastaveis = $PecasArrastaveis
@@ -19,18 +19,19 @@ var peca_arrastavel_cena = preload("res://peca_arrastavel.tscn")
 var tabuleiro_jogo: Tabuleiro
 var aguardar_jogada_IA = false
 var thread_IA: Thread = Thread.new()
-var thread_pecas: Thread = Thread.new()
 var mutex: Mutex = Mutex.new()
 var semaphore: Semaphore = Semaphore.new()
 var ia: Minimax = Minimax.new()
 
+var reiniciando_jogo = false
+var marcando_vitoria = false
 var profundidade_maxima: int = 2
 var tipo_jogador_amarelo_atual: Jogador.TipoJogador = Jogador.TipoJogador.Humano
 var tipo_jogador_vermelho_atual: Jogador.TipoJogador = Jogador.TipoJogador.Humano
 
 func _ready():
 	botao_dificuldade.connect("pressed", _on_dificuldade_pressed)
-	for opcao_jogo in opcoes_jogo:
+	for opcao_jogo in opcoes_jogo.get_children():
 		opcao_jogo.connect("pressed", _on_opcoes_jogo_pressed.bind(opcao_jogo.name))
 
 	call_deferred("iniciar_jogo")
@@ -43,31 +44,33 @@ func _on_dificuldade_pressed() -> void:
 			profundidade_maxima = 3
 		Dificuldade.SeletorDificuldade.Dificil:
 			profundidade_maxima = 4
-			
-	reiniciar_jogo()
+
+	await reiniciar_jogo()
 
 func _on_opcoes_jogo_pressed(nome_opcao: String) -> void:
+	opcoes_jogo.tocar_som_botao_opcao()
+	
 	match nome_opcao:
 		"JogadorContraJogador":
 			print("Jogador vs Jogador")
 			tipo_jogador_amarelo_atual = Jogador.TipoJogador.Humano
 			tipo_jogador_vermelho_atual = Jogador.TipoJogador.Humano
-			reiniciar_jogo()
+			await reiniciar_jogo()
 		"JogadorContraIA":
 			print("Jogador vs IA")
 			tipo_jogador_amarelo_atual = Jogador.TipoJogador.Humano
 			tipo_jogador_vermelho_atual = Jogador.TipoJogador.Computador
-			reiniciar_jogo()
+			await reiniciar_jogo()
 		"IAContraJogador":
 			print("IA vs Jogador")
 			tipo_jogador_amarelo_atual = Jogador.TipoJogador.Computador
 			tipo_jogador_vermelho_atual = Jogador.TipoJogador.Humano
-			reiniciar_jogo()
+			await reiniciar_jogo()
 		"IAContraIA":
 			print("IA vs IA")
 			tipo_jogador_amarelo_atual = Jogador.TipoJogador.Computador
 			tipo_jogador_vermelho_atual = Jogador.TipoJogador.Computador
-			reiniciar_jogo()
+			await reiniciar_jogo()
 
 func iniciar_jogo() -> void:
 	for i in range(21):
@@ -86,26 +89,26 @@ func iniciar_jogo() -> void:
 		peca_arrastavel.jogada_na_coluna.connect(jogar_na_posicao_arrastando)
 		
 		pecas_arrastaveis.add_child(peca_arrastavel)
-		
-	reiniciar_jogo()
+
+	await reiniciar_jogo()
 
 func reiniciar_jogo() -> void:
+	if reiniciando_jogo || marcando_vitoria:
+		return
+	
+	reiniciando_jogo = true
+	
 	desabilitar_colunas()
 
-	botao_dificuldade.disabled = true
-	for opcao_jogo in opcoes_jogo:
-		opcao_jogo.disabled = true
-		
 	Global2D.cancelar_IA = true
 	aguardar_jogada_IA = true
 	if thread_IA.is_started():
 		semaphore.post()
 		thread_IA.wait_to_finish()
 	
+	await reiniciar_pecas()
 	for espaco in espacos.get_children():
 		espaco.ocupado = false
-	
-	reiniciar_pecas()
 	
 	tabuleiro_jogo = Tabuleiro.new()
 	tabuleiro_jogo.jogador_amarelo.tipo_jogador = tipo_jogador_amarelo_atual
@@ -119,11 +122,9 @@ func reiniciar_jogo() -> void:
 	if tabuleiro_jogo.jogador_atual.tipo_jogador == Jogador.TipoJogador.Computador:
 		semaphore.post()
 
-	botao_dificuldade.disabled = false
-	for opcao_jogo in opcoes_jogo:
-		opcao_jogo.disabled = false
-
 	habilitar_colunas()
+	
+	reiniciando_jogo = false
 
 func reiniciar_pecas() -> void:
 	for peca_arrastavel in pecas_arrastaveis.get_children():
@@ -245,7 +246,6 @@ func jogar_na_posicao_arrastando(peca_arrastavel, coluna):
 		destruir_peca_arrastavel(peca_arrastavel)
 
 		await jogar_na_posicao(coluna, null, false)
-		await peca_arrastavel.peca_destruida
 
 func jogar_na_posicao(coluna, linha = null, limpar_peca_arrastavel = true):
 	desabilitar_colunas()
@@ -275,7 +275,6 @@ func jogar_na_posicao(coluna, linha = null, limpar_peca_arrastavel = true):
 			arrastaveis.shuffle()
 			var peca_arrastavel = arrastaveis.filter(func (arrastavel): return arrastavel.cor_jogador == jogador.cor)[0]
 			destruir_peca_arrastavel(peca_arrastavel)
-			await peca_arrastavel.peca_destruida
 
 		tabuleiro_jogo.computar_jogada(espaco_disponivel.linha, espaco_disponivel.coluna)
 		print("Jogada na posição: [", espaco_disponivel.linha, ", ", espaco_disponivel.coluna, "]")
@@ -284,7 +283,7 @@ func jogar_na_posicao(coluna, linha = null, limpar_peca_arrastavel = true):
 			info_jogo.text = Jogador.Cor.keys()[tabuleiro_jogo.jogador_vitoria.cor] + " venceu!"
 			print("Jogador ", Jogador.Cor.keys()[jogador.cor], " venceu!")
 			
-			marcar_vitoria()
+			await marcar_vitoria()
 			
 			mostrar_tabuleiro_CLI()
 		elif tabuleiro_jogo.verificar_empate():
@@ -321,6 +320,8 @@ func pegar_espaco_disponivel(coluna, linha = null):
 	return espaco_disponivel
 
 func marcar_vitoria() -> void:
+	marcando_vitoria = true
+	
 	var animacao_vitoria = animacao_vitoria_amarelo\
 		if tabuleiro_jogo.jogador_vitoria.cor == Jogador.Cor.Amarelo else animacao_vitoria_vermelho
 	var espacos_jogo = espacos.get_children()
@@ -341,3 +342,5 @@ func marcar_vitoria() -> void:
 		await peca.jogar_peca(espaco.global_position)
 		
 		vitorias_multiplas[espaco_vitoria] = true
+		
+	marcando_vitoria = false
