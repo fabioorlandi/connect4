@@ -83,9 +83,10 @@ func reiniciar_jogo(tipo_jogador_amarelo, tipo_jogador_vermelho) -> void:
 		thread.wait_to_finish()
 
 	for peca_arrastavel in pecas_arrastaveis.get_children():
-		peca_arrastavel.destruir_peca_arrastavel()
+		var posicao_x = -1000 if peca_arrastavel.cor_jogador == Jogador.Cor.Amarelo else 2000
+		peca_arrastavel.destruir_peca_arrastavel(Vector2(posicao_x, 0))
 	for peca in pecas.get_children():
-		await peca.destruir_peca()
+		peca.destruir_peca()
 	for espaco in espacos.get_children():
 		espaco.ocupado = false
 	for i in range(21):
