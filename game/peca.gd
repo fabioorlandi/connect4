@@ -1,5 +1,7 @@
 extends Node2D
 
+signal peca_destruida
+
 func jogar_peca(posicao: Vector2) -> void:
 	var tween = create_tween()
 	tween.tween_property(self, "global_position:y", posicao.y, 0.6)\
@@ -7,6 +9,17 @@ func jogar_peca(posicao: Vector2) -> void:
 	.set_ease(Tween.EASE_OUT)
 	$Peca_caindo.play()
 	await tween.finished
+
+func destruir_peca() -> void:
+	var tween = create_tween()
+	tween.tween_property(self, "global_position:y", 1000, 0.6)\
+	.set_trans(Tween.TRANS_BACK)\
+	.set_ease(Tween.EASE_IN)
+
+	await tween.finished
+	peca_destruida.emit()
+
+	self.queue_free()
 
 func mudar_textura_jogador(caminho_arquivo_textura: String) -> void:
 	$Sprite2D.texture = load(caminho_arquivo_textura)
