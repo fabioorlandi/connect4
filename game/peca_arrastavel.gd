@@ -10,6 +10,7 @@ signal peca_destruida
 @onready var peca_vermelha_mesa = "res://Assets/peca_vermelha_mesa.png"
 
 var cor_jogador := Jogador.Cor.Nenhum
+var destruida = false
 var mouse_over := false
 var dragging := false
 var posicao_inicial: Vector2
@@ -72,6 +73,8 @@ func construir_peca_arrastavel(posicao: Vector2) -> void:
 	.set_ease(Tween.EASE_OUT)
 	await tween.finished
 	
+	destruida = false
+	
 	peca_construida.emit()
 
 func destruir_peca_arrastavel(posicao: Vector2) -> void:
@@ -80,5 +83,7 @@ func destruir_peca_arrastavel(posicao: Vector2) -> void:
 	.set_trans(Tween.TRANS_CUBIC)\
 	.set_ease(Tween.EASE_IN)
 	await tween.finished
+	
+	destruida = true
 
 	peca_destruida.emit()

@@ -246,6 +246,7 @@ func jogar_na_posicao_arrastando(peca_arrastavel, coluna):
 		destruir_peca_arrastavel(peca_arrastavel)
 
 		await jogar_na_posicao(coluna, null, false)
+		await peca_arrastavel.peca_destruida
 
 func jogar_na_posicao(coluna, linha = null, limpar_peca_arrastavel = true):
 	desabilitar_colunas()
@@ -273,8 +274,11 @@ func jogar_na_posicao(coluna, linha = null, limpar_peca_arrastavel = true):
 		if limpar_peca_arrastavel:
 			var arrastaveis = pecas_arrastaveis.get_children()
 			arrastaveis.shuffle()
-			var peca_arrastavel = arrastaveis.filter(func (arrastavel): return arrastavel.cor_jogador == jogador.cor)[0]
-			destruir_peca_arrastavel(peca_arrastavel)
+			var peca_arrastavel = arrastaveis.filter(func (arrastavel):\
+				return arrastavel.cor_jogador == jogador.cor and not arrastavel.destruida)\
+				.get(0)
+			if peca_arrastavel:
+				destruir_peca_arrastavel(peca_arrastavel)
 
 		tabuleiro_jogo.computar_jogada(espaco_disponivel.linha, espaco_disponivel.coluna)
 		print("Jogada na posição: [", espaco_disponivel.linha, ", ", espaco_disponivel.coluna, "]")
