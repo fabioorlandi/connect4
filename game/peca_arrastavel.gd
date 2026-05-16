@@ -62,3 +62,12 @@ func _on_area_exited(area):
 			
 func mudar_textura_jogador(caminho_arquivo_textura: String) -> void:
 	$Sprite2D.texture = load(caminho_arquivo_textura)
+	
+
+func destruir_peca_arrastavel() -> void:
+	var tween = create_tween()
+	tween.tween_property(self, "global_position:y", 500, 5000)\
+	.set_trans(Tween.TRANS_BACK)\
+	.set_ease(Tween.EASE_IN)
+	await tween.finished
+	self.queue_free()

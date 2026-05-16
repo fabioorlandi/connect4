@@ -83,9 +83,9 @@ func reiniciar_jogo(tipo_jogador_amarelo, tipo_jogador_vermelho) -> void:
 		thread.wait_to_finish()
 
 	for peca_arrastavel in pecas_arrastaveis.get_children():
-		peca_arrastavel.queue_free()
+		peca_arrastavel.destruir_peca_arrastavel()
 	for peca in pecas.get_children():
-		peca.queue_free()
+		await peca.destruir_peca()
 	for espaco in espacos.get_children():
 		espaco.ocupado = false
 	for i in range(21):

@@ -6,23 +6,23 @@
 [ext_resource type="Texture2D" uid="uid://bwcjc34e1ts3q" path="res://Assets/Botões Modalidades/Botão1.png" id="4_wjb41"]
 [ext_resource type="Texture2D" uid="uid://cq4baxdpvhw6p" path="res://Assets/Botões Modalidades/Botão1_Pressionado.png" id="5_2m66s"]
 [ext_resource type="Texture2D" uid="uid://dcf0n7373d3qx" path="res://Assets/Botões Modalidades/Botão2.png" id="6_x8lwq"]
-[ext_resource type="Script" path="res://botao_jogadorvs_jogador.gd" id="7_ageka"]
+[ext_resource type="Script" uid="uid://csdbpgp53obys" path="res://botao_jogadorvs_jogador.gd" id="7_ageka"]
 [ext_resource type="Texture2D" uid="uid://b8pij4sytbk5j" path="res://Assets/Botões Modalidades/Botão2_Pressionado.png" id="7_yg014"]
 [ext_resource type="Texture2D" uid="uid://dgn6lws12mf1v" path="res://Assets/Botões Modalidades/Botão4.png" id="8_bmdto"]
 [ext_resource type="Texture2D" uid="uid://c4dphsu61s4dm" path="res://Assets/Botões Modalidades/Botão4_pressionado.png" id="9_chom7"]
 [ext_resource type="Texture2D" uid="uid://ddx8agh0ec3m5" path="res://Assets/Botões Modalidades/Botão3.png" id="10_gxukf"]
-[ext_resource type="Script" path="res://botao_jogadorvs_ai.gd" id="11_xmuci"]
+[ext_resource type="Script" uid="uid://c62his8bwoyne" path="res://botao_jogadorvs_ai.gd" id="11_xmuci"]
 [ext_resource type="Texture2D" uid="uid://rd0lhr08ad7f" path="res://Assets/Botões Modalidades/Botão3_pressionado.png" id="11_xqc7l"]
 [ext_resource type="Texture2D" uid="uid://bru7kwj7jo1b6" path="res://Assets/Botões Modalidades/Botao_facil.png" id="12_bmdto"]
 [ext_resource type="Script" uid="uid://c8bqom7kje4gf" path="res://botao_dificuldade.gd" id="13_chom7"]
 [ext_resource type="Texture2D" uid="uid://buyydxl7kijqv" path="res://Assets/Botões Modalidades/Botao_medio.png" id="14_gxukf"]
-[ext_resource type="Script" path="res://botao_a_ivs_ai.gd" id="14_rv35a"]
+[ext_resource type="Script" uid="uid://cupwtj0y2u7at" path="res://botao_a_ivs_ai.gd" id="14_rv35a"]
 [ext_resource type="AudioStream" uid="uid://dw5xxtn15poej" path="res://SFX/pressionar_botao.wav" id="14_xmuci"]
 [ext_resource type="Texture2D" uid="uid://x0ankf0hn3qh" path="res://Assets/Botões Modalidades/Botao_Dificil.png" id="15_xqc7l"]
 [ext_resource type="Texture2D" uid="uid://byxyc8tdp5fyw" path="res://Assets/Teste stickynote.png" id="16_gxukf"]
 [ext_resource type="Texture2D" uid="uid://bot5gv304ymjp" path="res://Assets/Teste stickynote2.png" id="17_gr0b1"]
-[ext_resource type="Script" path="res://botao_a_ivs_jogador.gd" id="17_k6srb"]
-[ext_resource type="Script" path="res://sticky_note.gd" id="17_xqc7l"]
+[ext_resource type="Script" uid="uid://dib2hd6wfrnxn" path="res://botao_a_ivs_jogador.gd" id="17_k6srb"]
+[ext_resource type="Script" uid="uid://dbuiwna24mgbc" path="res://sticky_note.gd" id="17_xqc7l"]
 [ext_resource type="Texture2D" uid="uid://c00pwxcw32ljv" path="res://Assets/Teste stickynote3.png" id="19_4xt2l"]
 [ext_resource type="FontFile" uid="uid://cnhbk7rdyf35d" path="res://Assets/Fontes/8bitoperator_jve.ttf" id="25_rv35a"]
 
@@ -48,7 +48,7 @@ texture = ExtResource("2_kyn48")
 expand_mode = 1
 
 [node name="Computador" type="TextureRect" parent="." unique_id=28704615]
-z_index = -1
+z_index = -2
 layout_mode = 1
 offset_left = 46.22229
 offset_top = 20.0
@@ -60,7 +60,7 @@ expand_mode = 1
 stretch_mode = 5
 
 [node name="Mesa" type="TextureRect" parent="." unique_id=1380741495]
-z_index = -2
+z_index = -3
 layout_mode = 0
 offset_top = 430.0
 offset_right = 3840.0
