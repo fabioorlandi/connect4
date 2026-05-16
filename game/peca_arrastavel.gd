@@ -1,6 +1,8 @@
 extends Area2D
 
 signal jogada_na_coluna(peca_arrastavel, indice_coluna)
+signal peca_construida
+signal peca_destruida
 
 @onready var peca_vermelha = "res://Assets/peca_vermelha.png"
 @onready var peca_amarela = "res://Assets/peca_amarela.png"
@@ -63,10 +65,22 @@ func _on_area_exited(area):
 func mudar_textura_jogador(caminho_arquivo_textura: String) -> void:
 	$Sprite2D.texture = load(caminho_arquivo_textura)
 
+func construir_peca_arrastavel(posicao: Vector2) -> void:
+	var tween = create_tween()
+	tween.tween_property(self, "global_position:x", posicao.x, 0.4)\
+	.set_trans(Tween.TRANS_SINE)\
+	.set_ease(Tween.EASE_OUT)
+	await tween.finished
+	
+	peca_construida.emit()
+
 func destruir_peca_arrastavel(posicao: Vector2) -> void:
 	var tween = create_tween()
-	tween.tween_property(self, "global_position:x", posicao.x, 0.6)\
-	.set_trans(Tween.TRANS_QUINT)\
+	tween.tween_property(self, "global_position:x", posicao.x, 0.4)\
+	.set_trans(Tween.TRANS_CUBIC)\
 	.set_ease(Tween.EASE_IN)
 	await tween.finished
+
+	peca_destruida.emit()
+	
 	self.queue_free()

@@ -16,24 +16,24 @@ extends Node2D
 
 var peca_cena = preload("res://peca.tscn")
 var peca_arrastavel_cena = preload("res://peca_arrastavel.tscn")
-var profundidade_maxima: int
 var tabuleiro_jogo: Tabuleiro
 var aguardar_jogada_IA = false
-var thread: Thread = Thread.new()
+var thread_IA: Thread = Thread.new()
+var thread_UI: Thread = Thread.new()
 var mutex: Mutex = Mutex.new()
 var semaphore: Semaphore = Semaphore.new()
 var ia: Minimax = Minimax.new()
 
-var tipo_jogador_amarelo_atual: Jogador.TipoJogador
-var tipo_jogador_vermelho_atual: Jogador.TipoJogador
+var profundidade_maxima: int = 2
+var tipo_jogador_amarelo_atual: Jogador.TipoJogador = Jogador.TipoJogador.Humano
+var tipo_jogador_vermelho_atual: Jogador.TipoJogador = Jogador.TipoJogador.Humano
 
 func _ready():
-	profundidade_maxima = 2
-	reiniciar_jogo(Jogador.TipoJogador.Humano, Jogador.TipoJogador.Humano)
-
 	botao_dificuldade.connect("pressed", _on_dificuldade_pressed)
 	for opcao_jogo in opcoes_jogo:
 		opcao_jogo.connect("pressed", _on_opcoes_jogo_pressed.bind(opcao_jogo.name))
+
+	call_deferred("reiniciar_jogo")
 
 func _on_dificuldade_pressed() -> void:
 	match botao_dificuldade.dificuldade:
@@ -44,7 +44,7 @@ func _on_dificuldade_pressed() -> void:
 		Dificuldade.SeletorDificuldade.Dificil:
 			profundidade_maxima = 4
 			
-	reiniciar_jogo(tipo_jogador_amarelo_atual, tipo_jogador_vermelho_atual)
+	reiniciar_jogo()
 
 func _on_opcoes_jogo_pressed(nome_opcao: String) -> void:
 	match nome_opcao:
@@ -52,24 +52,24 @@ func _on_opcoes_jogo_pressed(nome_opcao: String) -> void:
 			print("Jogador vs Jogador")
 			tipo_jogador_amarelo_atual = Jogador.TipoJogador.Humano
 			tipo_jogador_vermelho_atual = Jogador.TipoJogador.Humano
-			reiniciar_jogo(tipo_jogador_amarelo_atual, tipo_jogador_vermelho_atual)
+			reiniciar_jogo()
 		"JogadorContraIA":
 			print("Jogador vs IA")
 			tipo_jogador_amarelo_atual = Jogador.TipoJogador.Humano
 			tipo_jogador_vermelho_atual = Jogador.TipoJogador.Computador
-			reiniciar_jogo(tipo_jogador_amarelo_atual, tipo_jogador_vermelho_atual)
+			reiniciar_jogo()
 		"IAContraJogador":
 			print("IA vs Jogador")
 			tipo_jogador_amarelo_atual = Jogador.TipoJogador.Computador
 			tipo_jogador_vermelho_atual = Jogador.TipoJogador.Humano
-			reiniciar_jogo(tipo_jogador_amarelo_atual, tipo_jogador_vermelho_atual)
+			reiniciar_jogo()
 		"IAContraIA":
 			print("IA vs IA")
 			tipo_jogador_amarelo_atual = Jogador.TipoJogador.Computador
 			tipo_jogador_vermelho_atual = Jogador.TipoJogador.Computador
-			reiniciar_jogo(tipo_jogador_amarelo_atual, tipo_jogador_vermelho_atual)
+			reiniciar_jogo()
 
-func reiniciar_jogo(tipo_jogador_amarelo, tipo_jogador_vermelho) -> void:
+func reiniciar_jogo() -> void:
 	desabilitar_colunas()
 
 	botao_dificuldade.disabled = true
@@ -78,42 +78,20 @@ func reiniciar_jogo(tipo_jogador_amarelo, tipo_jogador_vermelho) -> void:
 		
 	Global2D.cancelar_IA = true
 	aguardar_jogada_IA = true
-	if thread.is_started():
+	if thread_IA.is_started():
 		semaphore.post()
-		thread.wait_to_finish()
-
-	for peca_arrastavel in pecas_arrastaveis.get_children():
-		var posicao_x = -1000 if peca_arrastavel.cor_jogador == Jogador.Cor.Amarelo else 2000
-		peca_arrastavel.destruir_peca_arrastavel(Vector2(posicao_x, 0))
-	for peca in pecas.get_children():
-		peca.destruir_peca()
-	for espaco in espacos.get_children():
-		espaco.ocupado = false
-	for i in range(21):
-		var peca_arrastavel = peca_arrastavel_cena.instantiate()
-		peca_arrastavel.cor_jogador = Jogador.Cor.Amarelo
-		peca_arrastavel.global_position = Vector2(randi_range(25, 225), 475 + i * 5)
-		peca_arrastavel.mudar_textura_jogador(peca_amarela_mesa)
-		peca_arrastavel.jogada_na_coluna.connect(jogar_na_posicao_arrastando)
-		
-		pecas_arrastaveis.add_child(peca_arrastavel)
-	for i in range(21):
-		var peca_arrastavel = peca_arrastavel_cena.instantiate()
-		peca_arrastavel.cor_jogador = Jogador.Cor.Vermelho
-		peca_arrastavel.global_position = Vector2(randi_range(925, 1125), 475 + i * 5)
-		peca_arrastavel.mudar_textura_jogador(peca_vermelha_mesa)
-		peca_arrastavel.jogada_na_coluna.connect(jogar_na_posicao_arrastando)
-		
-		pecas_arrastaveis.add_child(peca_arrastavel)
+		thread_IA.wait_to_finish()
 	
 	tabuleiro_jogo = Tabuleiro.new()
-	tabuleiro_jogo.jogador_amarelo.tipo_jogador = tipo_jogador_amarelo
-	tabuleiro_jogo.jogador_vermelho.tipo_jogador = tipo_jogador_vermelho
+	tabuleiro_jogo.jogador_amarelo.tipo_jogador = tipo_jogador_amarelo_atual
+	tabuleiro_jogo.jogador_vermelho.tipo_jogador = tipo_jogador_vermelho_atual
 	info_jogo.text = "Jogador: " + Jogador.Cor.keys()[tabuleiro_jogo.jogador_atual.cor]
+	
+	reiniciar_pecas()
 
 	Global2D.cancelar_IA = false
 	aguardar_jogada_IA = false
-	thread.start(iniciar_jogada_IA)
+	thread_IA.start(iniciar_jogada_IA)
 	
 	if tabuleiro_jogo.jogador_atual.tipo_jogador == Jogador.TipoJogador.Computador:
 		semaphore.post()
@@ -123,6 +101,46 @@ func reiniciar_jogo(tipo_jogador_amarelo, tipo_jogador_vermelho) -> void:
 		opcao_jogo.disabled = false
 
 	habilitar_colunas()
+
+func reiniciar_pecas() -> void:
+	for peca_arrastavel in pecas_arrastaveis.get_children():
+		var posicao_x = -500 if peca_arrastavel.cor_jogador == Jogador.Cor.Amarelo else 1750
+		peca_arrastavel.destruir_peca_arrastavel(Vector2(posicao_x, 0))
+	for peca in pecas.get_children():
+		peca.destruir_peca()
+	
+	var pecas_destruidas = []
+	pecas_destruidas.append_array(pecas_arrastaveis.get_children())
+	pecas_destruidas.append_array(pecas.get_children())
+	for peca in pecas_destruidas:
+		await peca.peca_destruida
+
+	for i in range(21):
+		var peca_arrastavel = peca_arrastavel_cena.instantiate()
+		peca_arrastavel.cor_jogador = Jogador.Cor.Amarelo
+		peca_arrastavel.global_position = Vector2(-500, 475 + i * 5)
+		peca_arrastavel.mudar_textura_jogador(peca_amarela_mesa)
+		peca_arrastavel.jogada_na_coluna.connect(jogar_na_posicao_arrastando)
+		
+		pecas_arrastaveis.add_child(peca_arrastavel)
+	for i in range(21):
+		var peca_arrastavel = peca_arrastavel_cena.instantiate()
+		peca_arrastavel.cor_jogador = Jogador.Cor.Vermelho
+		peca_arrastavel.global_position = Vector2(1750, 475 + i * 5)
+		peca_arrastavel.mudar_textura_jogador(peca_vermelha_mesa)
+		peca_arrastavel.jogada_na_coluna.connect(jogar_na_posicao_arrastando)
+		
+		pecas_arrastaveis.add_child(peca_arrastavel)
+		
+	for peca_arrastavel in pecas_arrastaveis.get_children():
+		var posicao_x = randi_range(25, 225) if peca_arrastavel.cor_jogador == Jogador.Cor.Amarelo else randi_range(925, 1125)
+		peca_arrastavel.construir_peca_arrastavel(Vector2(posicao_x, peca_arrastavel.global_position.y))
+	for peca_arrastavel in pecas_arrastaveis.get_children():
+		await peca_arrastavel.peca_construida
+		
+	for espaco in espacos.get_children():
+		espaco.ocupado = false
+
 
 func desabilitar_colunas():
 	if $Tabuleiro/Colunas/AreaColuna_0.is_connected("coluna_selecionada", jogar_na_posicao):
