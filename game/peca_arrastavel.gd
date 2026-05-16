@@ -82,5 +82,3 @@ func destruir_peca_arrastavel(posicao: Vector2) -> void:
 	await tween.finished
 
 	peca_destruida.emit()
-	
-	self.queue_free()
