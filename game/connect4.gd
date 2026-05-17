@@ -32,7 +32,8 @@ var tipo_jogador_vermelho_atual: Jogador.TipoJogador = Jogador.TipoJogador.Human
 func _ready():
 	botao_dificuldade.connect("pressed", _on_dificuldade_pressed)
 	for opcao_jogo in opcoes_jogo.get_children():
-		opcao_jogo.connect("pressed", _on_opcoes_jogo_pressed.bind(opcao_jogo.name))
+		if not opcao_jogo.get_class() == "AudioStreamPlayer":
+			opcao_jogo.connect("pressed", _on_opcoes_jogo_pressed.bind(opcao_jogo.name))
 
 	call_deferred("iniciar_jogo")
 
@@ -93,12 +94,13 @@ func iniciar_jogo() -> void:
 	await reiniciar_jogo()
 
 func reiniciar_jogo() -> void:
-	if reiniciando_jogo || marcando_vitoria:
+	if reiniciando_jogo or marcando_vitoria:
 		return
 	
 	reiniciando_jogo = true
 	
-	desabilitar_colunas()
+	bloquear_peca_fantasma(true)
+	desabilitar_signals()
 
 	Global2D.cancelar_IA = true
 	aguardar_jogada_IA = true
@@ -114,7 +116,7 @@ func reiniciar_jogo() -> void:
 	tabuleiro_jogo.jogador_amarelo.tipo_jogador = tipo_jogador_amarelo_atual
 	tabuleiro_jogo.jogador_vermelho.tipo_jogador = tipo_jogador_vermelho_atual
 	info_jogo.text = "Jogador: " + Jogador.Cor.keys()[tabuleiro_jogo.jogador_atual.cor]
-
+	
 	Global2D.cancelar_IA = false
 	aguardar_jogada_IA = false
 	thread_IA.start(iniciar_jogada_IA)
@@ -122,8 +124,10 @@ func reiniciar_jogo() -> void:
 	if tabuleiro_jogo.jogador_atual.tipo_jogador == Jogador.TipoJogador.Computador:
 		semaphore.post()
 
-	habilitar_colunas()
-	
+	habilitar_signals()
+	bloquear_peca_fantasma(false)
+	atualizar_peca_fantasma(tabuleiro_jogo.jogador_atual)
+
 	reiniciando_jogo = false
 
 func reiniciar_pecas() -> void:
@@ -151,41 +155,27 @@ func destruir_peca_arrastavel(peca_arrastavel):
 	var posicao_x = -500 if peca_arrastavel.cor_jogador == Jogador.Cor.Amarelo else 1750
 	peca_arrastavel.destruir_peca_arrastavel(Vector2(posicao_x, peca_arrastavel.global_position.y))
 
-func desabilitar_colunas():
-	if $Tabuleiro/Colunas/AreaColuna_0.is_connected("coluna_selecionada", jogar_na_posicao):
-		$Tabuleiro/Colunas/AreaColuna_0.coluna_selecionada.disconnect(jogar_na_posicao)
-	if $Tabuleiro/Colunas/AreaColuna_1.is_connected("coluna_selecionada", jogar_na_posicao):
-		$Tabuleiro/Colunas/AreaColuna_1.coluna_selecionada.disconnect(jogar_na_posicao)
-	if $Tabuleiro/Colunas/AreaColuna_2.is_connected("coluna_selecionada", jogar_na_posicao):
-		$Tabuleiro/Colunas/AreaColuna_2.coluna_selecionada.disconnect(jogar_na_posicao)
-	if $Tabuleiro/Colunas/AreaColuna_3.is_connected("coluna_selecionada", jogar_na_posicao):
-		$Tabuleiro/Colunas/AreaColuna_3.coluna_selecionada.disconnect(jogar_na_posicao)
-	if $Tabuleiro/Colunas/AreaColuna_4.is_connected("coluna_selecionada", jogar_na_posicao):
-		$Tabuleiro/Colunas/AreaColuna_4.coluna_selecionada.disconnect(jogar_na_posicao)
-	if $Tabuleiro/Colunas/AreaColuna_5.is_connected("coluna_selecionada", jogar_na_posicao):
-		$Tabuleiro/Colunas/AreaColuna_5.coluna_selecionada.disconnect(jogar_na_posicao)
-	if $Tabuleiro/Colunas/AreaColuna_6.is_connected("coluna_selecionada", jogar_na_posicao):
-		$Tabuleiro/Colunas/AreaColuna_6.coluna_selecionada.disconnect(jogar_na_posicao)
-		
+func desabilitar_signals():
+	for coluna in colunas.get_children():
+		if coluna.is_connected("coluna_selecionada", jogar_na_posicao):
+			coluna.coluna_selecionada.disconnect(jogar_na_posicao)
+		if coluna.is_connected("mudar_jogador", coluna.mudar_fantasma_jogador):
+			coluna.mudar_jogador.disconnect(coluna.mudar_fantasma_jogador)
+		if coluna.is_connected("atualizar_hover", coluna.atualizar_mouse_entered):
+			coluna.atualizar_hover.disconnect(coluna.atualizar_mouse_entered)
+
 	for peca_arrastavel in $PecasArrastaveis.get_children():
 		if peca_arrastavel.is_connected("jogada_na_coluna", jogar_na_posicao_arrastando):
 			peca_arrastavel.jogada_na_coluna.disconnect(jogar_na_posicao_arrastando)
 
-func habilitar_colunas():
-	if not $Tabuleiro/Colunas/AreaColuna_0.is_connected("coluna_selecionada", jogar_na_posicao):
-		$Tabuleiro/Colunas/AreaColuna_0.coluna_selecionada.connect(jogar_na_posicao)
-	if not $Tabuleiro/Colunas/AreaColuna_1.is_connected("coluna_selecionada", jogar_na_posicao):
-		$Tabuleiro/Colunas/AreaColuna_1.coluna_selecionada.connect(jogar_na_posicao)
-	if not $Tabuleiro/Colunas/AreaColuna_2.is_connected("coluna_selecionada", jogar_na_posicao):
-		$Tabuleiro/Colunas/AreaColuna_2.coluna_selecionada.connect(jogar_na_posicao)
-	if not $Tabuleiro/Colunas/AreaColuna_3.is_connected("coluna_selecionada", jogar_na_posicao):
-		$Tabuleiro/Colunas/AreaColuna_3.coluna_selecionada.connect(jogar_na_posicao)
-	if not $Tabuleiro/Colunas/AreaColuna_4.is_connected("coluna_selecionada", jogar_na_posicao):
-		$Tabuleiro/Colunas/AreaColuna_4.coluna_selecionada.connect(jogar_na_posicao)
-	if not $Tabuleiro/Colunas/AreaColuna_5.is_connected("coluna_selecionada", jogar_na_posicao):
-		$Tabuleiro/Colunas/AreaColuna_5.coluna_selecionada.connect(jogar_na_posicao)
-	if not $Tabuleiro/Colunas/AreaColuna_6.is_connected("coluna_selecionada", jogar_na_posicao):
-		$Tabuleiro/Colunas/AreaColuna_6.coluna_selecionada.connect(jogar_na_posicao)
+func habilitar_signals():
+	for coluna in colunas.get_children():
+		if not coluna.is_connected("coluna_selecionada", jogar_na_posicao):
+			coluna.coluna_selecionada.connect(jogar_na_posicao)
+		if not coluna.is_connected("mudar_jogador", coluna.mudar_fantasma_jogador):
+			coluna.mudar_jogador.connect(coluna.mudar_fantasma_jogador)
+		if not coluna.is_connected("atualizar_hover", coluna.atualizar_mouse_entered):
+			coluna.atualizar_hover.connect(coluna.atualizar_mouse_entered)
 		
 	for peca_arrastavel in $PecasArrastaveis.get_children():
 		if not peca_arrastavel.is_connected("jogada_na_coluna", jogar_na_posicao_arrastando):
@@ -225,7 +215,7 @@ func iniciar_jogada_IA():
 				call_deferred("finalizar_jogada_IA", jogada)
 
 func finalizar_jogada_IA(jogada: Jogada):
-	desabilitar_colunas()
+	desabilitar_signals()
 
 	var linha = jogada.movimento[0]
 	var coluna = jogada.movimento[1]
@@ -249,7 +239,7 @@ func jogar_na_posicao_arrastando(peca_arrastavel, coluna):
 		await peca_arrastavel.peca_destruida
 
 func jogar_na_posicao(coluna, linha = null, limpar_peca_arrastavel = true):
-	desabilitar_colunas()
+	desabilitar_signals()
 	
 	if not tabuleiro_jogo.estado_terminal() and not aguardar_jogada_IA:
 		var jogador = tabuleiro_jogo.jogador_atual
@@ -259,7 +249,7 @@ func jogar_na_posicao(coluna, linha = null, limpar_peca_arrastavel = true):
 		if espaco_disponivel == null:
 			print("Coluna cheia!")
 			aguardar_jogada_IA = false
-			habilitar_colunas()
+			habilitar_signals()
 			return
 		
 		var peca = peca_cena.instantiate()
@@ -286,9 +276,10 @@ func jogar_na_posicao(coluna, linha = null, limpar_peca_arrastavel = true):
 		if tabuleiro_jogo.verificar_vitoria(jogador):
 			info_jogo.text = Jogador.Cor.keys()[tabuleiro_jogo.jogador_vitoria.cor] + " venceu!"
 			print("Jogador ", Jogador.Cor.keys()[jogador.cor], " venceu!")
-			
-			await marcar_vitoria()
-			
+
+			bloquear_peca_fantasma(true)
+			marcar_vitoria()
+
 			mostrar_tabuleiro_CLI()
 		elif tabuleiro_jogo.verificar_empate():
 			info_jogo.text = "Empate!"
@@ -298,7 +289,9 @@ func jogar_na_posicao(coluna, linha = null, limpar_peca_arrastavel = true):
 		else:
 			var proximo_a_jogar = tabuleiro_jogo.proximo_a_jogar()
 			info_jogo.text = "Jogador: " + Jogador.Cor.keys()[proximo_a_jogar.cor]
-			habilitar_colunas()
+			habilitar_signals()
+			
+			atualizar_peca_fantasma(proximo_a_jogar)
 	
 			mostrar_tabuleiro_CLI()
 			if tabuleiro_jogo.proximo_a_jogar().tipo_jogador == Jogador.TipoJogador.Computador\
@@ -321,11 +314,29 @@ func pegar_espaco_disponivel(coluna, linha = null):
 				if espaco_disponivel == null or espaco.linha > espaco_disponivel.linha:
 					espaco_disponivel = espaco
 
+	var coluna_selecionada = colunas.get_children().get(coluna)
+	if espaco_disponivel.linha == 0:
+		coluna_selecionada.coluna_bloqueada = true
+		coluna_selecionada.atualizar_hover.emit()
+
 	return espaco_disponivel
+
+func atualizar_peca_fantasma(jogador):
+	for area_coluna in colunas.get_children():
+		area_coluna.mudar_jogador.emit(jogador.cor, jogador.tipo_jogador)
+		area_coluna.atualizar_hover.emit()
+
+func bloquear_peca_fantasma(bloquear):
+	for area_coluna in colunas.get_children():
+		if bloquear:
+			area_coluna.mouse_exited.emit()
+
+		area_coluna.coluna_bloqueada = bloquear
+		area_coluna.atualizar_hover.emit()
 
 func marcar_vitoria() -> void:
 	marcando_vitoria = true
-	
+
 	var animacao_vitoria = animacao_vitoria_amarelo\
 		if tabuleiro_jogo.jogador_vitoria.cor == Jogador.Cor.Amarelo else animacao_vitoria_vermelho
 	var espacos_jogo = espacos.get_children()
