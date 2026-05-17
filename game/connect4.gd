@@ -328,6 +328,9 @@ func atualizar_peca_fantasma(jogador):
 
 func bloquear_peca_fantasma(bloquear):
 	for area_coluna in colunas.get_children():
+		if bloquear:
+			area_coluna.mouse_exited.emit()
+
 		area_coluna.coluna_bloqueada = bloquear
 		area_coluna.atualizar_hover.emit()
 
