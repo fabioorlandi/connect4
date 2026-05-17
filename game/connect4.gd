@@ -98,7 +98,8 @@ func reiniciar_jogo() -> void:
 		return
 	
 	reiniciando_jogo = true
-
+	
+	bloquear_peca_fantasma(true)
 	desabilitar_signals()
 
 	Global2D.cancelar_IA = true
@@ -124,7 +125,8 @@ func reiniciar_jogo() -> void:
 		semaphore.post()
 
 	habilitar_signals()
-	atualizar_peca_fantasma(tabuleiro_jogo.jogador_amarelo, null)
+	bloquear_peca_fantasma(false)
+	atualizar_peca_fantasma(tabuleiro_jogo.jogador_atual)
 
 	reiniciando_jogo = false
 
@@ -157,8 +159,8 @@ func desabilitar_signals():
 	for coluna in colunas.get_children():
 		if coluna.is_connected("coluna_selecionada", jogar_na_posicao):
 			coluna.coluna_selecionada.disconnect(jogar_na_posicao)
-		if coluna.is_connected("mudar_cor_jogador", coluna.mudar_fantasma_jogador):
-			coluna.mudar_cor_jogador.disconnect(coluna.mudar_fantasma_jogador)
+		if coluna.is_connected("mudar_jogador", coluna.mudar_fantasma_jogador):
+			coluna.mudar_jogador.disconnect(coluna.mudar_fantasma_jogador)
 		if coluna.is_connected("atualizar_hover", coluna.atualizar_mouse_entered):
 			coluna.atualizar_hover.disconnect(coluna.atualizar_mouse_entered)
 
@@ -170,8 +172,8 @@ func habilitar_signals():
 	for coluna in colunas.get_children():
 		if not coluna.is_connected("coluna_selecionada", jogar_na_posicao):
 			coluna.coluna_selecionada.connect(jogar_na_posicao)
-		if not coluna.is_connected("mudar_cor_jogador", coluna.mudar_fantasma_jogador):
-			coluna.mudar_cor_jogador.connect(coluna.mudar_fantasma_jogador)
+		if not coluna.is_connected("mudar_jogador", coluna.mudar_fantasma_jogador):
+			coluna.mudar_jogador.connect(coluna.mudar_fantasma_jogador)
 		if not coluna.is_connected("atualizar_hover", coluna.atualizar_mouse_entered):
 			coluna.atualizar_hover.connect(coluna.atualizar_mouse_entered)
 		
@@ -274,9 +276,10 @@ func jogar_na_posicao(coluna, linha = null, limpar_peca_arrastavel = true):
 		if tabuleiro_jogo.verificar_vitoria(jogador):
 			info_jogo.text = Jogador.Cor.keys()[tabuleiro_jogo.jogador_vitoria.cor] + " venceu!"
 			print("Jogador ", Jogador.Cor.keys()[jogador.cor], " venceu!")
-			
-			await marcar_vitoria()
-			
+
+			bloquear_peca_fantasma(true)
+			marcar_vitoria()
+
 			mostrar_tabuleiro_CLI()
 		elif tabuleiro_jogo.verificar_empate():
 			info_jogo.text = "Empate!"
@@ -288,7 +291,7 @@ func jogar_na_posicao(coluna, linha = null, limpar_peca_arrastavel = true):
 			info_jogo.text = "Jogador: " + Jogador.Cor.keys()[proximo_a_jogar.cor]
 			habilitar_signals()
 			
-			atualizar_peca_fantasma(proximo_a_jogar, coluna)
+			atualizar_peca_fantasma(proximo_a_jogar)
 	
 			mostrar_tabuleiro_CLI()
 			if tabuleiro_jogo.proximo_a_jogar().tipo_jogador == Jogador.TipoJogador.Computador\
@@ -311,27 +314,26 @@ func pegar_espaco_disponivel(coluna, linha = null):
 				if espaco_disponivel == null or espaco.linha > espaco_disponivel.linha:
 					espaco_disponivel = espaco
 
+	var coluna_selecionada = colunas.get_children().get(coluna)
+	if espaco_disponivel.linha == 0:
+		coluna_selecionada.coluna_bloqueada = true
+		coluna_selecionada.atualizar_hover.emit()
+
 	return espaco_disponivel
 
-func atualizar_peca_fantasma(jogador, coluna):
+func atualizar_peca_fantasma(jogador):
 	for area_coluna in colunas.get_children():
-		if not jogador.cor == area_coluna.cor_jogador:
-			area_coluna.mudar_cor_jogador.emit(jogador.cor)
-		
-		if jogador.tipo_jogador == Jogador.TipoJogador.Humano:
-			area_coluna.atualizar_hover.emit(true)
-		else:
-			area_coluna.atualizar_hover.emit(false)
-	
-	if coluna:
-		if jogador.tipo_jogador == Jogador.TipoJogador.Humano:
-			colunas.get_children().get(coluna).atualizar_hover.emit(true)
-		else:
-			colunas.get_children().get(coluna).atualizar_hover.emit(false)
+		area_coluna.mudar_jogador.emit(jogador.cor, jogador.tipo_jogador)
+		area_coluna.atualizar_hover.emit()
+
+func bloquear_peca_fantasma(bloquear):
+	for area_coluna in colunas.get_children():
+		area_coluna.coluna_bloqueada = bloquear
+		area_coluna.atualizar_hover.emit()
 
 func marcar_vitoria() -> void:
 	marcando_vitoria = true
-	
+
 	var animacao_vitoria = animacao_vitoria_amarelo\
 		if tabuleiro_jogo.jogador_vitoria.cor == Jogador.Cor.Amarelo else animacao_vitoria_vermelho
 	var espacos_jogo = espacos.get_children()

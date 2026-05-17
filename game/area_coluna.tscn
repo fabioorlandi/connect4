@@ -50,7 +50,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"peca_fantasma_amarela",
-"speed": 8.0
+"speed": 5.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -85,7 +85,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"peca_fantasma_vermelha",
-"speed": 20.0
+"speed": 30.0
 }]
 
 [node name="AreaColuna" type="Area2D" unique_id=1369472653 groups=["AreaColunas"]]
@@ -101,7 +101,7 @@ modulate = Color(1, 1, 1, 0.49803922)
 z_index = -2
 position = Vector2(0, -58)
 sprite_frames = SubResource("SpriteFrames_4778e")
-animation = &"peca_fantasma_vermelha"
+animation = &"peca_fantasma_amarela"
 
 [connection signal="input_event" from="." to="." method="_input_event"]
 [connection signal="mouse_entered" from="." to="." method="_on_mouse_entered"]
