@@ -7,14 +7,14 @@ func jogar_peca(posicao: Vector2) -> void:
 	tween.tween_property(self, "global_position:y", posicao.y, 0.6)\
 	.set_trans(Tween.TRANS_BOUNCE)\
 	.set_ease(Tween.EASE_OUT)
+	$Peca_caindo.pitch_scale = randf_range(1.5, 1.6)
 	$Peca_caindo.play()
 	await tween.finished
 
 func destruir_peca() -> void:
 	var tween = create_tween()
-	tween.tween_property(self, "global_position:y", 1000, 0.6)\
-	.set_trans(Tween.TRANS_BACK)\
-	.set_ease(Tween.EASE_IN)
+	tween.tween_property(self, "global_position:y", 600, 0.6)\
+	.set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_IN)
 
 	await tween.finished
 	peca_destruida.emit()
