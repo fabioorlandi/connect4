@@ -3,6 +3,7 @@
 [ext_resource type="Texture2D" uid="uid://xcga42mkni53" path="res://Assets/fundo_mesa.png" id="2_kyn48"]
 [ext_resource type="Texture2D" uid="uid://dox30veslcgv5" path="res://Assets/mesa.png" id="2_xqc7l"]
 [ext_resource type="Texture2D" uid="uid://dlesyrat6i36q" path="res://Assets/computador.png" id="3_4rbkc"]
+[ext_resource type="AudioStream" uid="uid://bdenqmui0bm8m" path="res://SFX/computador_pensando.wav" id="3_603jb"]
 [ext_resource type="Script" uid="uid://dcmmnlcxxd6i1" path="res://opcoes_jogo.gd" id="4_ageka"]
 [ext_resource type="Texture2D" uid="uid://bwcjc34e1ts3q" path="res://Assets/Botões Modalidades/Botão1.png" id="4_wjb41"]
 [ext_resource type="Texture2D" uid="uid://dufo7fquxg2iw" path="res://Assets/teclado.png" id="4_xmuci"]
@@ -34,6 +35,19 @@
 [ext_resource type="Script" uid="uid://cuddevp8lhfn5" path="res://Minimenu.gd" id="32_ccu2c"]
 [ext_resource type="Texture2D" uid="uid://jdkifwr6caqa" path="res://Assets/Minimenu_icone.png" id="33_dxqbk"]
 [ext_resource type="Texture2D" uid="uid://cn2i168nj0y0j" path="res://Assets/Minimenu_icone_clique.png" id="34_fl4i2"]
+[ext_resource type="Texture2D" uid="uid://b0vqx8uj7hsmh" path="res://Assets/menu_fundo.png" id="35_5ef64"]
+[ext_resource type="Texture2D" uid="uid://d4b3tfuc8st4n" path="res://Assets/progresso_under.png" id="36_l6a10"]
+[ext_resource type="Texture2D" uid="uid://c725nrk03k43c" path="res://Assets/progresso_over.png" id="37_fca4u"]
+[ext_resource type="Texture2D" uid="uid://bf5vcd5oqv0nx" path="res://Assets/sair_icone.png" id="38_koan2"]
+[ext_resource type="Texture2D" uid="uid://xvdjgt4gmcth" path="res://Assets/mais.png" id="39_03c3u"]
+[ext_resource type="Script" uid="uid://dks6262budkh1" path="res://botao_volume.gd" id="39_ii5pu"]
+[ext_resource type="Texture2D" uid="uid://dxgdo3sk4vuqe" path="res://Assets/menos.png" id="41_2nfls"]
+[ext_resource type="Script" uid="uid://c84o3l2v3scji" path="res://botao_volume_descer.gd" id="41_2twgo"]
+[ext_resource type="Texture2D" uid="uid://sr0hxw1yonp7" path="res://Assets/desmutado.png" id="43_548ue"]
+[ext_resource type="Script" uid="uid://tnnecoa4akb7" path="res://botao_volume_musica_subir.gd" id="43_603jb"]
+[ext_resource type="Script" uid="uid://buwtv6naln3pm" path="res://botao_mutar.gd" id="43_kqcs8"]
+[ext_resource type="Texture2D" uid="uid://duoas8c78b52r" path="res://Assets/mutado.png" id="44_603jb"]
+[ext_resource type="Script" uid="uid://xgpgbgec4frj" path="res://botao_volume_musica_descer.gd" id="44_d0lvc"]
 
 [sub_resource type="ButtonGroup" id="ButtonGroup_2m66s"]
 
@@ -68,6 +82,11 @@ texture = ExtResource("3_4rbkc")
 expand_mode = 1
 stretch_mode = 5
 
+[node name="SomPensando" type="AudioStreamPlayer" parent="Computador" unique_id=2099953313]
+stream = ExtResource("3_603jb")
+volume_db = -9.0
+bus = &"Efeitos"
+
 [node name="Mesa" type="TextureRect" parent="." unique_id=1380741495]
 z_index = -3
 layout_mode = 0
@@ -98,6 +117,8 @@ script = ExtResource("4_ageka")
 
 [node name="SomBotaoModo" type="AudioStreamPlayer" parent="OpcoesJogo" unique_id=1993720659]
 stream = ExtResource("14_xmuci")
+volume_db = -5.0
+bus = &"Efeitos"
 
 [node name="JogadorContraJogador" type="TextureButton" parent="OpcoesJogo" unique_id=381144]
 layout_mode = 0
@@ -161,15 +182,17 @@ textures = Array[Texture2D]([ExtResource("12_bmdto"), ExtResource("14_gxukf"), E
 
 [node name="botaodificuldadeclique" type="AudioStreamPlayer" parent="BotaoDificuldade" unique_id=1057855534]
 stream = ExtResource("19_xjgpx")
+volume_db = -6.0
 pitch_scale = 1.5
+bus = &"Efeitos"
 
 [node name="StickyNote3" type="TextureButton" parent="." unique_id=1509890896]
 z_index = -4
 layout_mode = 0
-offset_left = 944.99994
-offset_top = 156.0
-offset_right = 1370.0
-offset_bottom = 626.0
+offset_left = 963.0001
+offset_top = 176.00002
+offset_right = 1388.0002
+offset_bottom = 646.0
 rotation = 0.13264503
 scale = Vector2(0.16, 0.16)
 texture_normal = ExtResource("20_rv35a")
@@ -177,14 +200,15 @@ script = ExtResource("17_xqc7l")
 
 [node name="som_stickynote" type="AudioStreamPlayer" parent="StickyNote3" unique_id=1616763977]
 stream = ExtResource("22_guimq")
+bus = &"Efeitos"
 
 [node name="StickyNote7" type="TextureButton" parent="." unique_id=2005890273]
 z_index = -4
 layout_mode = 0
-offset_left = 895.0
-offset_top = 302.00003
-offset_right = 1320.0
-offset_bottom = 772.0
+offset_left = 914.00006
+offset_top = 277.0
+offset_right = 1339.0
+offset_bottom = 747.0
 rotation = -0.52883476
 scale = Vector2(0.16, 0.16)
 texture_normal = ExtResource("20_rv35a")
@@ -192,14 +216,15 @@ script = ExtResource("17_xqc7l")
 
 [node name="som_stickynote" type="AudioStreamPlayer" parent="StickyNote7" unique_id=1531835051]
 stream = ExtResource("22_guimq")
+bus = &"Efeitos"
 
 [node name="StickyNote4" type="TextureButton" parent="." unique_id=321735564]
 z_index = -4
 layout_mode = 0
-offset_left = 1093.0
-offset_top = 181.0
-offset_right = 1519.0
-offset_bottom = 651.0
+offset_left = 1037.0
+offset_top = 280.0
+offset_right = 1463.0
+offset_bottom = 750.0
 rotation = -0.13264503
 scale = Vector2(0.16, 0.16)
 texture_normal = ExtResource("22_k6srb")
@@ -207,14 +232,15 @@ script = ExtResource("17_xqc7l")
 
 [node name="som_stickynote" type="AudioStreamPlayer" parent="StickyNote4" unique_id=1212949639]
 stream = ExtResource("22_guimq")
+bus = &"Efeitos"
 
 [node name="StickyNote5" type="TextureButton" parent="." unique_id=741418219]
 z_index = -4
 layout_mode = 0
-offset_left = 1031.0
-offset_top = 287.00003
-offset_right = 1457.0
-offset_bottom = 757.0
+offset_left = 999.0
+offset_top = 246.00003
+offset_right = 1425.0
+offset_bottom = 716.0
 rotation = -0.52883476
 scale = Vector2(0.16, 0.16)
 texture_normal = ExtResource("23_6b6dw")
@@ -222,14 +248,15 @@ script = ExtResource("17_xqc7l")
 
 [node name="som_stickynote" type="AudioStreamPlayer" parent="StickyNote5" unique_id=1684450285]
 stream = ExtResource("22_guimq")
+bus = &"Efeitos"
 
 [node name="StickyNote6" type="TextureButton" parent="." unique_id=1779185771]
 z_index = -4
 layout_mode = 0
-offset_left = 1003.0
-offset_top = 197.0
-offset_right = 1429.0
-offset_bottom = 667.0
+offset_left = 1117.0
+offset_top = 184.0
+offset_right = 1543.0
+offset_bottom = 654.0
 rotation = 0.17453292
 scale = Vector2(0.16, 0.16)
 texture_normal = ExtResource("23_6b6dw")
@@ -237,6 +264,7 @@ script = ExtResource("17_xqc7l")
 
 [node name="som_stickynote" type="AudioStreamPlayer" parent="StickyNote6" unique_id=823178829]
 stream = ExtResource("22_guimq")
+bus = &"Efeitos"
 
 [node name="StickyNote2" type="TextureButton" parent="." unique_id=2032349549]
 z_index = -4
@@ -253,6 +281,7 @@ script = ExtResource("27_ov4b6")
 
 [node name="som_stickynote" type="AudioStreamPlayer" parent="StickyNote2" unique_id=634655893]
 stream = ExtResource("22_guimq")
+bus = &"Efeitos"
 
 [node name="StickyNote8" type="TextureButton" parent="." unique_id=137805575]
 z_index = -4
@@ -269,6 +298,7 @@ script = ExtResource("30_ccu2c")
 
 [node name="som_stickynote" type="AudioStreamPlayer" parent="StickyNote8" unique_id=134584318]
 stream = ExtResource("22_guimq")
+bus = &"Efeitos"
 
 [node name="InfoJogo" type="Label" parent="." unique_id=1383009012]
 layout_mode = 0
@@ -287,6 +317,7 @@ script = ExtResource("32_ccu2c")
 
 [node name="som_stickynote" type="AudioStreamPlayer" parent="CanvasLayer" unique_id=1549229583]
 stream = ExtResource("22_guimq")
+bus = &"Efeitos"
 
 [node name="MenuIcone" type="TextureButton" parent="CanvasLayer" unique_id=170406863]
 offset_left = 1056.0001
@@ -297,31 +328,110 @@ scale = Vector2(0.2, 0.2)
 texture_normal = ExtResource("33_dxqbk")
 texture_pressed = ExtResource("34_fl4i2")
 
-[node name="Panel" type="Panel" parent="CanvasLayer" unique_id=230407487]
-offset_left = 470.0
-offset_top = 133.0
-offset_right = 788.0
-offset_bottom = 398.0
-size_flags_horizontal = 4
-size_flags_vertical = 4
+[node name="Panel" type="TextureRect" parent="CanvasLayer" unique_id=1474399374]
+offset_left = 403.0
+offset_top = 36.999996
+offset_right = 2124.4287
+offset_bottom = 2011.9999
+scale = Vector2(0.28, 0.28)
+mouse_filter = 0
+texture = ExtResource("35_5ef64")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/Panel" unique_id=1445512612]
-layout_mode = 1
-offset_left = 58.0
-offset_top = 31.0
-offset_right = 271.0
-offset_bottom = 232.0
-
-[node name="Label" type="Label" parent="CanvasLayer/Panel/VBoxContainer" unique_id=809406660]
-layout_mode = 2
-
-[node name="HSlider" type="HSlider" parent="CanvasLayer/Panel/VBoxContainer" unique_id=245978494]
-layout_mode = 2
+[node name="BarraVolume" type="TextureProgressBar" parent="CanvasLayer/Panel" unique_id=514154734]
+layout_mode = 0
+offset_left = 560.7144
+offset_top = 567.8572
+offset_right = 1187.7145
+offset_bottom = 638.8572
 value = 80.0
+texture_under = ExtResource("36_l6a10")
+texture_progress = ExtResource("37_fca4u")
 
-[node name="Button" type="Button" parent="CanvasLayer/Panel/VBoxContainer" unique_id=1732430905]
-layout_mode = 2
+[node name="BarraVolumeMusica" type="TextureProgressBar" parent="CanvasLayer/Panel" unique_id=1317132410]
+layout_mode = 0
+offset_left = 542.85724
+offset_top = 892.8571
+offset_right = 1169.8572
+offset_bottom = 963.8571
+value = 80.0
+texture_under = ExtResource("36_l6a10")
+texture_progress = ExtResource("37_fca4u")
+
+[node name="BotaoSair" type="TextureButton" parent="CanvasLayer/Panel" unique_id=846821911]
+layout_mode = 0
+offset_left = 1274.9999
+offset_top = 1485.7144
+offset_right = 1700.9999
+offset_bottom = 1955.7144
+scale = Vector2(0.8, 0.8)
+texture_normal = ExtResource("38_koan2")
+
+[node name="BotaoVolume_Subir" type="TextureButton" parent="CanvasLayer/Panel" unique_id=12840347]
+layout_mode = 0
+offset_left = 1221.4285
+offset_top = 496.42856
+offset_right = 1647.4285
+offset_bottom = 966.4286
+scale = Vector2(0.4, 0.4)
+texture_normal = ExtResource("39_03c3u")
+script = ExtResource("39_ii5pu")
+
+[node name="BotaoVolume_Descer" type="TextureButton" parent="CanvasLayer/Panel" unique_id=534543450]
+layout_mode = 0
+offset_left = 321.42862
+offset_top = 507.14282
+offset_right = 747.4287
+offset_bottom = 977.1428
+scale = Vector2(0.4, 0.4)
+texture_normal = ExtResource("41_2nfls")
+script = ExtResource("41_2twgo")
+
+[node name="BotaoVolume_Subir2" type="TextureButton" parent="CanvasLayer/Panel" unique_id=1146380822]
+layout_mode = 0
+offset_left = 1232.1427
+offset_top = 825.0
+offset_right = 1658.1427
+offset_bottom = 1295.0
+scale = Vector2(0.4, 0.4)
+texture_normal = ExtResource("39_03c3u")
+script = ExtResource("43_603jb")
+
+[node name="BotaoVolume_Descer2" type="TextureButton" parent="CanvasLayer/Panel" unique_id=810464166]
+layout_mode = 0
+offset_left = 317.85718
+offset_top = 825.0
+offset_right = 743.8573
+offset_bottom = 1295.0
+scale = Vector2(0.4, 0.4)
+texture_normal = ExtResource("41_2nfls")
+script = ExtResource("44_d0lvc")
+
+[node name="BotaoMutar" type="TextureButton" parent="CanvasLayer/Panel" unique_id=1241552423]
+layout_mode = 0
+offset_left = 692.8571
+offset_top = 967.85724
+offset_right = 1118.8572
+offset_bottom = 1437.8573
+scale = Vector2(0.8, 0.8)
+toggle_mode = true
+texture_normal = ExtResource("43_548ue")
+texture_pressed = ExtResource("44_603jb")
+script = ExtResource("43_kqcs8")
+
+[node name="BotaoFechar" type="TextureButton" parent="CanvasLayer/Panel" unique_id=1128385577]
+layout_mode = 0
+offset_left = 1621.4285
+offset_top = -46.428516
+offset_right = 2047.4285
+offset_bottom = 423.57147
+rotation = 0.7853982
+scale = Vector2(0.4, 0.4)
+texture_normal = ExtResource("39_03c3u")
 
 [connection signal="pressed" from="CanvasLayer/MenuIcone" to="CanvasLayer" method="_on_menu_icone_pressed"]
-[connection signal="value_changed" from="CanvasLayer/Panel/VBoxContainer/HSlider" to="CanvasLayer" method="_on_h_slider_value_changed"]
-[connection signal="pressed" from="CanvasLayer/Panel/VBoxContainer/Button" to="CanvasLayer" method="_on_button_pressed"]
+[connection signal="value_changed" from="CanvasLayer/Panel/BarraVolume" to="CanvasLayer" method="_on_h_slider_value_changed"]
+[connection signal="value_changed" from="CanvasLayer/Panel/BarraVolume" to="CanvasLayer" method="_on_barra_volume_value_changed"]
+[connection signal="value_changed" from="CanvasLayer/Panel/BarraVolumeMusica" to="CanvasLayer" method="_on_h_slider_value_changed"]
+[connection signal="value_changed" from="CanvasLayer/Panel/BarraVolumeMusica" to="CanvasLayer" method="_on_barra_volume_musica_value_changed"]
+[connection signal="pressed" from="CanvasLayer/Panel/BotaoSair" to="CanvasLayer" method="_on_button_pressed"]
+[connection signal="pressed" from="CanvasLayer/Panel/BotaoFechar" to="CanvasLayer" method="_on_botao_fechar_pressed"]

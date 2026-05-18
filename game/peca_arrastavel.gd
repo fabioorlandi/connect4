@@ -21,6 +21,8 @@ func _process(delta):
 	var cor_peca_mesa = peca_amarela_mesa if cor_jogador == Jogador.Cor.Amarelo else peca_vermelha_mesa
 		
 	if mouse_over and Input.is_action_just_pressed("click") and not Global2D.is_dragging:
+		$SomAgarrar.pitch_scale = randf_range(6.96, 7.04)
+		$SomAgarrar.play()
 		self.mudar_textura_jogador(cor_peca)
 		self.scale = Vector2(0.5, 0.5)
 		self.z_index = 7

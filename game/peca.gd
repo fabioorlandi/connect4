@@ -7,7 +7,7 @@ func jogar_peca(posicao: Vector2) -> void:
 	tween.tween_property(self, "global_position:y", posicao.y, 0.6)\
 	.set_trans(Tween.TRANS_BOUNCE)\
 	.set_ease(Tween.EASE_OUT)
-	$Peca_caindo.pitch_scale = randf_range(1.5, 1.6)
+	$Peca_caindo.pitch_scale = randf_range(1.9, 2.0)
 	$Peca_caindo.play()
 	await tween.finished
 

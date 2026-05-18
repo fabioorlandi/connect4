@@ -14,6 +14,10 @@ config/name="Connect4"
 run/main_scene="uid://di0hpq6wxqjmf"
 config/features=PackedStringArray("4.6", "GL Compatibility")
 
+[audio]
+
+buses/default_bus_layout="uid://d0qkujyjpb47b"
+
 [autoload]
 
 Global2D="*uid://bql20j05fm52o"
@@ -21,6 +25,10 @@ Global2D="*uid://bql20j05fm52o"
 [display]
 
 window/stretch/mode="canvas_items"
+
+[global]
+
+Musica_fundo=false
 
 [input]
 

@@ -3,6 +3,8 @@
 [ext_resource type="Script" uid="uid://8tt27ycr7dpm" path="res://connect4.gd" id="1_vj5v0"]
 [ext_resource type="PackedScene" uid="uid://bht3a5xm2cd35" path="res://tabuleiro.tscn" id="2_70131"]
 [ext_resource type="PackedScene" uid="uid://cyotjxe8thfhh" path="res://interface.tscn" id="2_hkgr4"]
+[ext_resource type="AudioStream" uid="uid://bfwxft8j58g48" path="res://SFX/musica_fundo.wav" id="4_46xqr"]
+[ext_resource type="Script" uid="uid://cxkr0v2ylspv5" path="res://musica_fundo.gd" id="5_ad75c"]
 
 [node name="Connect4" type="Node2D" unique_id=2108255427]
 script = ExtResource("1_vj5v0")
@@ -19,3 +21,10 @@ scale = Vector2(0.7, 0.7)
 [node name="Pecas" type="Node2D" parent="." unique_id=1044892417]
 
 [node name="PecasArrastaveis" type="Node2D" parent="." unique_id=1318931599]
+
+[node name="MusicaFundo" type="AudioStreamPlayer" parent="." unique_id=1774256758]
+stream = ExtResource("4_46xqr")
+volume_db = -15.0
+autoplay = true
+bus = &"Musica_Fundo"
+script = ExtResource("5_ad75c")

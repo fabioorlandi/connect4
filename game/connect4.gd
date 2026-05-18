@@ -14,6 +14,11 @@ extends Node2D
 @onready var info_jogo = $Interface/InfoJogo
 @onready var pecas_arrastaveis = $PecasArrastaveis
 
+@onready var computador_sprite = $Interface/Computador
+
+var posicao_original_computador : Vector2
+var tempo_tremor :=0.0
+
 var peca_cena = preload("res://peca.tscn")
 var peca_arrastavel_cena = preload("res://peca_arrastavel.tscn")
 var tabuleiro_jogo: Tabuleiro
@@ -30,13 +35,36 @@ var tipo_jogador_amarelo_atual: Jogador.TipoJogador = Jogador.TipoJogador.Humano
 var tipo_jogador_vermelho_atual: Jogador.TipoJogador = Jogador.TipoJogador.Humano
 
 func _ready():
+	posicao_original_computador = computador_sprite.position
 	botao_dificuldade.connect("pressed", _on_dificuldade_pressed)
 	for opcao_jogo in opcoes_jogo.get_children():
 		if not opcao_jogo.get_class() == "AudioStreamPlayer":
 			opcao_jogo.connect("pressed", _on_opcoes_jogo_pressed.bind(opcao_jogo.name))
 
 	call_deferred("iniciar_jogo")
+	
+	
+func _process(delta):
+	if aguardar_jogada_IA:
+		info_jogo.text = "Pensando..."
+		if !$Interface/Computador/SomPensando.playing:
+			$Interface/Computador/SomPensando.pitch_scale = randf_range(0.98,1.02)
+			$Interface/Computador/SomPensando.play()
 
+		tempo_tremor += delta
+
+		computador_sprite.position = posicao_original_computador + Vector2(
+			sin(tempo_tremor * 90.0) * 1.5,
+			cos(tempo_tremor * 75.0) * 1.0
+	)
+
+	else:
+		computador_sprite.position = posicao_original_computador
+
+		if $Interface/Computador/SomPensando.playing:
+			$Interface/Computador/SomPensando.stop()
+		
+		
 func _on_dificuldade_pressed() -> void:
 	match botao_dificuldade.dificuldade:
 		Dificuldade.SeletorDificuldade.Facil:
