@@ -48,4 +48,5 @@ frame_progress = 0.63879055
 
 [node name="Peca_caindo" type="AudioStreamPlayer" parent="." unique_id=736120921]
 stream = ExtResource("6_n8aky")
+volume_db = -10.0
 pitch_scale = 1.5

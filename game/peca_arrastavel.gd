@@ -21,6 +21,8 @@ func _process(delta):
 	var cor_peca_mesa = peca_amarela_mesa if cor_jogador == Jogador.Cor.Amarelo else peca_vermelha_mesa
 		
 	if mouse_over and Input.is_action_just_pressed("click") and not Global2D.is_dragging:
+		$SomAgarrar.pitch_scale = randf_range(6.96, 7.04)
+		$SomAgarrar.play()
 		self.mudar_textura_jogador(cor_peca)
 		self.scale = Vector2(0.5, 0.5)
 		self.z_index = 7
@@ -74,16 +76,16 @@ func construir_peca_arrastavel(posicao: Vector2) -> void:
 	await tween.finished
 	
 	destruida = false
-	
 	peca_construida.emit()
 
-func destruir_peca_arrastavel(posicao: Vector2) -> void:
+func destruir_peca_arrastavel(posicao: Vector2, animar_tween = true) -> void:
+	var tempo_animacao = 0.4 if animar_tween else 0.0
+	
 	var tween = create_tween()
-	tween.tween_property(self, "global_position:x", posicao.x, 0.4)\
+	tween.tween_property(self, "global_position:x", posicao.x, tempo_animacao)\
 	.set_trans(Tween.TRANS_CUBIC)\
 	.set_ease(Tween.EASE_IN)
 	await tween.finished
 	
 	destruida = true
-
 	peca_destruida.emit()

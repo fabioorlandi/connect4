@@ -3,11 +3,16 @@ extends TextureButton
 var start_position
 var start_rotation
 
+func tocar_som_stickynote():
+	$som_stickynote.play()
+	$som_stickynote.seek(0.2)
+	
 func _ready():
 	start_position = position + Vector2(randf_range(-20,20), randf_range(-10,10))
 	start_rotation = rotation_degrees + randf_range(-10,10)
 	
 func _pressed():
+	tocar_som_stickynote()
 	var tween = create_tween()
 
 	tween.set_trans(Tween.TRANS_SINE)

@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://bmk5l4habqbw3"]
 
 [ext_resource type="Script" uid="uid://dwcpx0lt8ke2m" path="res://peca_arrastavel.gd" id="1_knmou"]
+[ext_resource type="AudioStream" uid="uid://btnhcyeo2srks" path="res://SFX/som_pegar.wav" id="2_mfr3a"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_vep2n"]
 
@@ -14,6 +15,9 @@ scale = Vector2(0.5, 0.5)
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=51678689]
 scale = Vector2(3, 3)
 shape = SubResource("RectangleShape2D_vep2n")
+
+[node name="SomAgarrar" type="AudioStreamPlayer" parent="." unique_id=352817971]
+stream = ExtResource("2_mfr3a")
 
 [connection signal="area_entered" from="." to="." method="_on_area_entered"]
 [connection signal="area_exited" from="." to="." method="_on_area_exited"]
