@@ -76,16 +76,16 @@ func construir_peca_arrastavel(posicao: Vector2) -> void:
 	await tween.finished
 	
 	destruida = false
-	
 	peca_construida.emit()
 
-func destruir_peca_arrastavel(posicao: Vector2) -> void:
+func destruir_peca_arrastavel(posicao: Vector2, animar_tween = true) -> void:
+	var tempo_animacao = 0.4 if animar_tween else 0.0
+	
 	var tween = create_tween()
-	tween.tween_property(self, "global_position:x", posicao.x, 0.4)\
+	tween.tween_property(self, "global_position:x", posicao.x, tempo_animacao)\
 	.set_trans(Tween.TRANS_CUBIC)\
 	.set_ease(Tween.EASE_IN)
 	await tween.finished
 	
 	destruida = true
-
 	peca_destruida.emit()

@@ -17,7 +17,7 @@ extends Node2D
 @onready var computador_sprite = $Interface/Computador
 
 var posicao_original_computador : Vector2
-var tempo_tremor :=0.0
+var tempo_tremor := 0.0
 
 var peca_cena = preload("res://peca.tscn")
 var peca_arrastavel_cena = preload("res://peca_arrastavel.tscn")
@@ -30,7 +30,7 @@ var ia: Minimax = Minimax.new()
 
 var reiniciando_jogo = false
 var marcando_vitoria = false
-var profundidade_maxima: int = 2
+var profundidade_maxima: int = 3
 var tipo_jogador_amarelo_atual: Jogador.TipoJogador = Jogador.TipoJogador.Humano
 var tipo_jogador_vermelho_atual: Jogador.TipoJogador = Jogador.TipoJogador.Humano
 
@@ -68,11 +68,11 @@ func _process(delta):
 func _on_dificuldade_pressed() -> void:
 	match botao_dificuldade.dificuldade:
 		Dificuldade.SeletorDificuldade.Facil:
-			profundidade_maxima = 2
-		Dificuldade.SeletorDificuldade.Medio:
 			profundidade_maxima = 3
-		Dificuldade.SeletorDificuldade.Dificil:
+		Dificuldade.SeletorDificuldade.Medio:
 			profundidade_maxima = 4
+		Dificuldade.SeletorDificuldade.Dificil:
+			profundidade_maxima = 5
 
 	await reiniciar_jogo()
 
@@ -179,9 +179,9 @@ func construir_peca_arrastavel(peca_arrastavel):
 	var posicao_x = randi_range(25, 225) if peca_arrastavel.cor_jogador == Jogador.Cor.Amarelo else randi_range(925, 1125)
 	peca_arrastavel.construir_peca_arrastavel(Vector2(posicao_x, peca_arrastavel.global_position.y))
 
-func destruir_peca_arrastavel(peca_arrastavel):
+func destruir_peca_arrastavel(peca_arrastavel, animar_tween = true):
 	var posicao_x = -500 if peca_arrastavel.cor_jogador == Jogador.Cor.Amarelo else 1750
-	peca_arrastavel.destruir_peca_arrastavel(Vector2(posicao_x, peca_arrastavel.global_position.y))
+	peca_arrastavel.destruir_peca_arrastavel(Vector2(posicao_x, peca_arrastavel.global_position.y), animar_tween)
 
 func desabilitar_signals():
 	for coluna in colunas.get_children():
@@ -255,13 +255,15 @@ func finalizar_jogada_IA(jogada: Jogada):
 	await jogar_na_posicao(coluna, linha)
 
 func jogar_na_posicao_arrastando(peca_arrastavel, coluna):
-	if not peca_arrastavel.cor_jogador == tabuleiro_jogo.jogador_atual.cor:
-		print("Peça inválida!")
+	var coluna_selecionada = colunas.get_children().get(coluna)
+	
+	if not peca_arrastavel.cor_jogador == tabuleiro_jogo.jogador_atual.cor or coluna_selecionada.coluna_bloqueada:
+		print("Jogada inválida!")
 		return
 	elif aguardar_jogada_IA:
 		return
 	else:
-		destruir_peca_arrastavel(peca_arrastavel)
+		destruir_peca_arrastavel(peca_arrastavel, false)
 
 		await jogar_na_posicao(coluna, null, false)
 		await peca_arrastavel.peca_destruida
@@ -343,7 +345,7 @@ func pegar_espaco_disponivel(coluna, linha = null):
 					espaco_disponivel = espaco
 
 	var coluna_selecionada = colunas.get_children().get(coluna)
-	if espaco_disponivel.linha == 0:
+	if espaco_disponivel and espaco_disponivel.linha == 0:
 		coluna_selecionada.coluna_bloqueada = true
 		coluna_selecionada.atualizar_hover.emit()
 
