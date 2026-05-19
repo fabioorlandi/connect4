@@ -50,3 +50,4 @@ frame_progress = 0.63879055
 stream = ExtResource("6_n8aky")
 volume_db = -10.0
 pitch_scale = 1.5
+bus = &"Efeitos"
