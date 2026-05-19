@@ -11,9 +11,9 @@
 [ext_resource type="Texture2D" uid="uid://dcf0n7373d3qx" path="res://Assets/Botões Modalidades/Botão2.png" id="6_x8lwq"]
 [ext_resource type="Texture2D" uid="uid://b8pij4sytbk5j" path="res://Assets/Botões Modalidades/Botão2_pressionado.png" id="7_yg014"]
 [ext_resource type="Texture2D" uid="uid://dgn6lws12mf1v" path="res://Assets/Botões Modalidades/Botão4.png" id="8_bmdto"]
-[ext_resource type="Texture2D" uid="uid://dlckfk0wjqjyu" path="res://Assets/Botões Modalidades/Botão4_pressionado.png" id="9_chom7"]
+[ext_resource type="Texture2D" uid="uid://dlckfk0wjqjyu" path="res://Assets/Botões Modalidades/Botão4_Pressionado.png" id="9_chom7"]
 [ext_resource type="Texture2D" uid="uid://ddx8agh0ec3m5" path="res://Assets/Botões Modalidades/Botão3.png" id="10_gxukf"]
-[ext_resource type="Texture2D" uid="uid://bsctvlvx55yry" path="res://Assets/Botões Modalidades/Botão3_pressionado.png" id="11_xqc7l"]
+[ext_resource type="Texture2D" uid="uid://bsctvlvx55yry" path="res://Assets/Botões Modalidades/Botão3_Pressionado.png" id="11_xqc7l"]
 [ext_resource type="Texture2D" uid="uid://bru7kwj7jo1b6" path="res://Assets/Botões Modalidades/Botao_facil.png" id="12_bmdto"]
 [ext_resource type="Script" uid="uid://c8bqom7kje4gf" path="res://botao_dificuldade.gd" id="13_chom7"]
 [ext_resource type="Texture2D" uid="uid://buyydxl7kijqv" path="res://Assets/Botões Modalidades/Botao_medio.png" id="14_gxukf"]
@@ -25,10 +25,12 @@
 [ext_resource type="AudioStream" uid="uid://uygflbg58278" path="res://SFX/sticky_notes.wav" id="22_guimq"]
 [ext_resource type="Texture2D" uid="uid://bju4aeq2kvg6l" path="res://Assets/sticky4.png" id="22_k6srb"]
 [ext_resource type="Texture2D" uid="uid://b1gtb0liwdkkr" path="res://Assets/sticky3.png" id="23_6b6dw"]
+[ext_resource type="Texture2D" uid="uid://df0kjjiwsqr08" path="res://Assets/sticky3b.png" id="24_62tcj"]
 [ext_resource type="Texture2D" uid="uid://cmvtby3pswyig" path="res://Assets/sticky1.png" id="24_yqnn6"]
 [ext_resource type="Texture2D" uid="uid://c5pvifla1y7gd" path="res://Assets/sticky2.png" id="25_k6srb"]
 [ext_resource type="FontFile" uid="uid://cnhbk7rdyf35d" path="res://Assets/Fontes/8bitoperator_jve.ttf" id="25_rv35a"]
 [ext_resource type="Texture2D" uid="uid://4oyv3fgdwqam" path="res://Assets/sticky1a.png" id="25_yqnn6"]
+[ext_resource type="Texture2D" uid="uid://2vraumapa0r6" path="res://Assets/sticky3a.png" id="26_00j3n"]
 [ext_resource type="Texture2D" uid="uid://yljlq087vlic" path="res://Assets/sticky2a.png" id="27_guimq"]
 [ext_resource type="Script" uid="uid://clktw2jj300ik" path="res://sticky_note_2.gd" id="27_ov4b6"]
 [ext_resource type="Script" uid="uid://bqkl8yp8igox3" path="res://sticky_note_8.gd" id="30_ccu2c"]
@@ -211,7 +213,7 @@ offset_right = 1339.0
 offset_bottom = 747.0
 rotation = -0.52883476
 scale = Vector2(0.16, 0.16)
-texture_normal = ExtResource("20_rv35a")
+texture_normal = ExtResource("24_62tcj")
 script = ExtResource("17_xqc7l")
 
 [node name="som_stickynote" type="AudioStreamPlayer" parent="StickyNote7" unique_id=1531835051]
@@ -237,13 +239,13 @@ bus = &"Efeitos"
 [node name="StickyNote5" type="TextureButton" parent="." unique_id=741418219]
 z_index = -4
 layout_mode = 0
-offset_left = 999.0
-offset_top = 246.00003
-offset_right = 1425.0
-offset_bottom = 716.0
-rotation = -0.52883476
-scale = Vector2(0.16, 0.16)
-texture_normal = ExtResource("23_6b6dw")
+offset_left = 1002.0
+offset_top = 228.00002
+offset_right = 1428.0
+offset_bottom = 698.0
+rotation = -0.13264503
+scale = Vector2(0.18, 0.18)
+texture_normal = ExtResource("26_00j3n")
 script = ExtResource("17_xqc7l")
 
 [node name="som_stickynote" type="AudioStreamPlayer" parent="StickyNote5" unique_id=1684450285]
@@ -253,10 +255,10 @@ bus = &"Efeitos"
 [node name="StickyNote6" type="TextureButton" parent="." unique_id=1779185771]
 z_index = -4
 layout_mode = 0
-offset_left = 1117.0
-offset_top = 184.0
-offset_right = 1543.0
-offset_bottom = 654.0
+offset_left = 1107.9999
+offset_top = 178.0
+offset_right = 1533.9999
+offset_bottom = 648.0
 rotation = 0.17453292
 scale = Vector2(0.16, 0.16)
 texture_normal = ExtResource("23_6b6dw")

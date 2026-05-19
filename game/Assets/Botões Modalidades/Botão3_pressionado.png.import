@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bsctvlvx55yry"
-path="res://.godot/imported/Botão3_pressionado.png-7cafc95cdbb3db5715fd32fbc1b71523.ctex"
+path="res://.godot/imported/Botão3_Pressionado.png-7be41027feb9ab25e7585ba8e26f6127.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/Botões Modalidades/Botão3_pressionado.png"
-dest_files=["res://.godot/imported/Botão3_pressionado.png-7cafc95cdbb3db5715fd32fbc1b71523.ctex"]
+source_file="res://Assets/Botões Modalidades/Botão3_Pressionado.png"
+dest_files=["res://.godot/imported/Botão3_Pressionado.png-7be41027feb9ab25e7585ba8e26f6127.ctex"]
 
 [params]
 
