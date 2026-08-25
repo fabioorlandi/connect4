@@ -31,7 +31,7 @@ var ia: Minimax = Minimax.new()
 var reiniciando_jogo = false
 var marcando_vitoria = false
 var profundidade_maxima: int = 4
-var aleatoriedade_IA: float = 60
+var aleatoriedade_IA: float = 40
 var tipo_jogador_amarelo_atual: Jogador.TipoJogador = Jogador.TipoJogador.Humano
 var tipo_jogador_vermelho_atual: Jogador.TipoJogador = Jogador.TipoJogador.Humano
 
