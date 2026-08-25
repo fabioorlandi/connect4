@@ -30,7 +30,8 @@ var ia: Minimax = Minimax.new()
 
 var reiniciando_jogo = false
 var marcando_vitoria = false
-var profundidade_maxima: int = 3
+var profundidade_maxima: int = 4
+var aleatoriedade_IA: float = 60
 var tipo_jogador_amarelo_atual: Jogador.TipoJogador = Jogador.TipoJogador.Humano
 var tipo_jogador_vermelho_atual: Jogador.TipoJogador = Jogador.TipoJogador.Humano
 
@@ -42,7 +43,6 @@ func _ready():
 			opcao_jogo.connect("pressed", _on_opcoes_jogo_pressed.bind(opcao_jogo.name))
 
 	call_deferred("iniciar_jogo")
-	
 	
 func _process(delta):
 	if aguardar_jogada_IA:
@@ -68,11 +68,14 @@ func _process(delta):
 func _on_dificuldade_pressed() -> void:
 	match botao_dificuldade.dificuldade:
 		Dificuldade.SeletorDificuldade.Facil:
-			profundidade_maxima = 3
+			profundidade_maxima = 4
+			aleatoriedade_IA = 40
 		Dificuldade.SeletorDificuldade.Medio:
 			profundidade_maxima = 4
+			aleatoriedade_IA = 20
 		Dificuldade.SeletorDificuldade.Dificil:
-			profundidade_maxima = 5
+			profundidade_maxima = 4
+			aleatoriedade_IA = 0
 
 	await reiniciar_jogo()
 
@@ -122,7 +125,7 @@ func iniciar_jogo() -> void:
 	await reiniciar_jogo()
 
 func reiniciar_jogo() -> void:
-	if reiniciando_jogo or marcando_vitoria:
+	if reiniciando_jogo:
 		return
 	
 	reiniciando_jogo = true
@@ -237,7 +240,7 @@ func iniciar_jogada_IA():
 			mutex.unlock()
 
 			var jogador = tabuleiro_jogo.jogador_atual
-			var jogada = ia.jogar(tabuleiro_jogo.duplicate(true), jogador, profundidade_maxima)
+			var jogada = ia.jogar(tabuleiro_jogo.duplicate(true), jogador, profundidade_maxima, aleatoriedade_IA)
 
 			if not Global2D.cancelar_IA:
 				call_deferred("finalizar_jogada_IA", jogada)
@@ -373,6 +376,10 @@ func marcar_vitoria() -> void:
 	
 	var vitorias_multiplas = {}
 	for espaco_vitoria in tabuleiro_jogo.espacos_com_vitoria:
+		if reiniciando_jogo:
+			marcando_vitoria = false
+			return
+
 		if vitorias_multiplas.has(espaco_vitoria):
 			continue
 		
