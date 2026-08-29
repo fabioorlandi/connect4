@@ -19,22 +19,26 @@ func _on_menu_icone_pressed() -> void:
 	$som_stickynote.play()
 	$som_stickynote.seek(0.2)
 
-
 func _on_button_pressed() -> void:
-	get_tree().quit()
-
+	get_tree().root.propagate_notification(NOTIFICATION_WM_CLOSE_REQUEST)
+	panel.visible = false
+	$som_stickynote.play()
+	$som_stickynote.seek(0.2)
+	
+	if OS.get_name() == "Web":
+		JavaScriptBridge.eval("window.close()")
+	else:
+		get_tree().quit()
 
 func _on_barra_volume_value_changed(value: float) -> void:
 		AudioServer.set_bus_volume_db(
 		AudioServer.get_bus_index("Efeitos"),
 		linear_to_db(value/100.0))
 
-
 func _on_barra_volume_musica_value_changed(value: float) -> void:
 		AudioServer.set_bus_volume_db(
 		AudioServer.get_bus_index("Musica_Fundo"),
 		linear_to_db(value/100.0))
-
 
 func _on_botao_fechar_pressed() -> void:
 	panel.visible = false

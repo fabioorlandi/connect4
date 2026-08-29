@@ -10,7 +10,7 @@ config_version=5
 
 [application]
 
-config/name="Connect4"
+config/name="Connectron4000"
 run/main_scene="uid://di0hpq6wxqjmf"
 config/features=PackedStringArray("4.7", "GL Compatibility")
 config/icon="uid://dflpkoc0368sg"
@@ -53,3 +53,4 @@ minimenu={
 rendering_device/driver.windows="d3d12"
 renderer/rendering_method="gl_compatibility"
 renderer/rendering_method.mobile="gl_compatibility"
+textures/vram_compression/import_etc2_astc=true
