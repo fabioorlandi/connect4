@@ -30,8 +30,8 @@ var ia: Minimax = Minimax.new()
 
 var reiniciando_jogo = false
 var marcando_vitoria = false
-var profundidade_maxima: int = 4
-var aleatoriedade_IA: float = 40
+var profundidade_maxima: int
+var aleatoriedade_IA: float
 var tipo_jogador_amarelo_atual: Jogador.TipoJogador = Jogador.TipoJogador.Humano
 var tipo_jogador_vermelho_atual: Jogador.TipoJogador = Jogador.TipoJogador.Humano
 
@@ -68,13 +68,13 @@ func _process(delta):
 func _on_dificuldade_pressed() -> void:
 	match botao_dificuldade.dificuldade:
 		Dificuldade.SeletorDificuldade.Facil:
-			profundidade_maxima = 4
+			profundidade_maxima = 3
 			aleatoriedade_IA = 40
 		Dificuldade.SeletorDificuldade.Medio:
-			profundidade_maxima = 4
+			profundidade_maxima = 3
 			aleatoriedade_IA = 20
 		Dificuldade.SeletorDificuldade.Dificil:
-			profundidade_maxima = 4
+			profundidade_maxima = 3
 			aleatoriedade_IA = 0
 
 	await reiniciar_jogo()
@@ -105,6 +105,8 @@ func _on_opcoes_jogo_pressed(nome_opcao: String) -> void:
 			await reiniciar_jogo()
 
 func iniciar_jogo() -> void:
+	_on_dificuldade_pressed()
+	
 	for i in range(21):
 		var peca_arrastavel = peca_arrastavel_cena.instantiate()
 		peca_arrastavel.cor_jogador = Jogador.Cor.Amarelo
